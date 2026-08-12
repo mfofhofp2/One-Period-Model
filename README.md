@@ -147,3 +147,231 @@ $$\text{Upper bound} = \frac{(110-100)(1\cdot100-90)}{1\cdot(110-90)} = \frac{10
 So the no-arbitrage range for this option's price is $0 \le v \le 5$.
 
 
+# Bond, Stock, Two Options — No-Arbitrage Bounds via Grassmann Algebra
+
+## Setup
+
+Four instruments: a bond with realized return $R$, a stock with current price $s$, and two call options with strikes $K_1<K_2$ and current prices $v_1,v_2$.
+
+$$x = O + \rho + s\sigma + v_1\kappa_1 + v_2\kappa_2$$
+
+$$X(\omega) = O + R\rho + \omega\sigma + \max(\omega-K_1,0)\kappa_1 + \max(\omega-K_2,0)\kappa_2$$
+
+We pick four reference outcomes $L<K_1<K_2<H$. Since each $\max(\cdot,0)$ term is zero below its strike:
+
+$$X(L) = O+R\rho+L\sigma \qquad X(K_1) = O+R\rho+K_1\sigma$$
+$$X(K_2) = O+R\rho+K_2\sigma+(K_2-K_1)\kappa_1 \qquad X(H) = O+R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2$$
+
+Only $X(K_2)$ and $X(H)$ carry option components — $X(L)$ and $X(K_1)$ sit below both strikes, so neither option is in the money there.
+
+**Goal**: write $x = a\,O + b\,X(L) + c\,X(K_1) + d\,X(K_2) + e\,X(H)$. Arbitrage-free requires $b,c,d,e\ge0$.
+
+## The computational tool
+
+Let $\Pi = O\,X(L)\,X(K_1)\,X(K_2)\,X(H)$. Replacing the $j$-th factor with $x$ gives $\Pi_j(x)$, and each coefficient is recovered by dividing by $\Pi$, exactly as before — just with one more factor in the product.
+
+Once the leading $O$ is factored out (using $O\wedge O=0$), we work with direction parts only:
+
+$$X(L)\to R\rho+L\sigma, \quad X(K_1)\to R\rho+K_1\sigma, \quad X(K_2)\to R\rho+K_2\sigma+(K_2-K_1)\kappa_1$$
+$$X(H)\to R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2, \quad x\to \rho+s\sigma+v_1\kappa_1+v_2\kappa_2$$
+
+Any wedge product with a repeated vector vanishes. The only surviving 4-fold products are permutations of $\rho\sigma\kappa_1\kappa_2$, with sign given by permutation parity. Identities used below:
+
+$$\rho\sigma\kappa_1\kappa_2=1,\quad \rho\kappa_1\sigma=-\rho\sigma\kappa_1,\quad \sigma\kappa_1\rho=+\rho\sigma\kappa_1,\quad \rho\kappa_2\sigma=-\rho\sigma\kappa_2,\quad \sigma\kappa_2\rho=+\rho\sigma\kappa_2$$
+$$\rho\kappa_1\kappa_2\sigma=+\rho\sigma\kappa_1\kappa_2, \quad \sigma\kappa_1\kappa_2\rho=-\rho\sigma\kappa_1\kappa_2, \quad \rho\sigma\kappa_2\kappa_1=-\rho\sigma\kappa_1\kappa_2$$
+
+## Step 1 — Compute $\Pi = O\,X(L)\,X(K_1)\,X(K_2)\,X(H)$
+
+**First multiplication** — $(R\rho+L\sigma)\wedge(R\rho+K_1\sigma)$:
+
+| Term | Result | Kept? |
+|---|---|---|
+| $R\rho\wedge R\rho$ | $0$ | vanishes ($\rho$ repeats) |
+| $R\rho\wedge K_1\sigma$ | $RK_1\,\rho\sigma$ | kept |
+| $L\sigma\wedge R\rho$ | $-LR\,\rho\sigma$ | kept |
+| $L\sigma\wedge K_1\sigma$ | $0$ | vanishes ($\sigma$ repeats) |
+
+$$(R\rho+L\sigma)\wedge(R\rho+K_1\sigma) = R(K_1-L)\,\rho\sigma$$
+
+**Second multiplication** — wedge with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$. Since we already have $\rho\sigma$, only the $\kappa_1$ term avoids a repeat:
+
+$$R(K_1-L)\,\rho\sigma \wedge (K_2-K_1)\kappa_1 = R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1$$
+
+**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$. Only the $\kappa_2$ term avoids a repeat:
+
+$$R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1 \wedge (H-K_2)\kappa_2 = R(K_1-L)(K_2-K_1)(H-K_2)\,\rho\sigma\kappa_1\kappa_2$$
+
+$$\boxed{\Pi = R(K_1-L)(K_2-K_1)(H-K_2)\; O\rho\sigma\kappa_1\kappa_2}$$
+
+Since $L<K_1<K_2<H$ and $R>0$, every factor is positive — **$\Pi$ is positive** this time (unlike the single-option case). No sign flips are needed when dividing by $\Pi$ below.
+
+## Step 2 — Compute $\Pi_1(x) = O\,x\,X(K_1)\,X(K_2)\,X(H)$ (coefficient $b$ of $X(L)$)
+
+**First multiplication** — $(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)\wedge(R\rho+K_1\sigma)$:
+
+| Term | Result | Kept? |
+|---|---|---|
+| $\rho\wedge R\rho$ | $0$ | vanishes |
+| $\rho\wedge K_1\sigma$ | $K_1\,\rho\sigma$ | kept |
+| $s\sigma\wedge R\rho$ | $-sR\,\rho\sigma$ | kept |
+| $s\sigma\wedge K_1\sigma$ | $0$ | vanishes |
+| $v_1\kappa_1\wedge R\rho$ | $-v_1R\,\rho\kappa_1$ | kept |
+| $v_1\kappa_1\wedge K_1\sigma$ | $-v_1K_1\,\sigma\kappa_1$ | kept |
+| $v_2\kappa_2\wedge R\rho$ | $-v_2R\,\rho\kappa_2$ | kept |
+| $v_2\kappa_2\wedge K_1\sigma$ | $-v_2K_1\,\sigma\kappa_2$ | kept |
+
+$$= (K_1-sR)\rho\sigma - v_1R\,\rho\kappa_1 - v_1K_1\,\sigma\kappa_1 - v_2R\,\rho\kappa_2 - v_2K_1\,\sigma\kappa_2$$
+
+**Second multiplication** — wedge each term with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$, keeping only terms that avoid repeats:
+
+| Source term | Surviving cross-term | Result |
+|---|---|---|
+| $(K_1-sR)\rho\sigma$ | $\wedge(K_2-K_1)\kappa_1$ | $(K_1-sR)(K_2-K_1)\,\rho\sigma\kappa_1$ |
+| $-v_1R\,\rho\kappa_1$ | $\wedge K_2\sigma$ | $+v_1RK_2\,\rho\sigma\kappa_1$ |
+| $-v_1K_1\,\sigma\kappa_1$ | $\wedge R\rho$ | $-v_1K_1R\,\rho\sigma\kappa_1$ |
+| $-v_2R\,\rho\kappa_2$ | $\wedge K_2\sigma,\ \wedge(K_2-K_1)\kappa_1$ | $v_2RK_2\,\rho\sigma\kappa_2 + v_2R(K_2-K_1)\,\rho\kappa_1\kappa_2$ |
+| $-v_2K_1\,\sigma\kappa_2$ | $\wedge R\rho,\ \wedge(K_2-K_1)\kappa_1$ | $-v_2K_1R\,\rho\sigma\kappa_2 + v_2K_1(K_2-K_1)\,\sigma\kappa_1\kappa_2$ |
+
+Collecting by basis 3-vector:
+
+$$\rho\sigma\kappa_1:\ \ (K_2-K_1)\big[K_1-R(s-v_1)\big] \qquad \rho\sigma\kappa_2:\ \ v_2R(K_2-K_1)$$
+$$\rho\kappa_1\kappa_2:\ \ v_2R(K_2-K_1) \qquad \sigma\kappa_1\kappa_2:\ \ v_2K_1(K_2-K_1)$$
+
+**Third multiplication** — wedge each 3-vector term with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$, keeping only the complementary basis vector each time:
+
+| Source 3-vector | Complementary term | Result |
+|---|---|---|
+| $\rho\sigma\kappa_1$ | $\wedge(H-K_2)\kappa_2$ | $(K_2-K_1)[K_1-R(s-v_1)](H-K_2)\,\rho\sigma\kappa_1\kappa_2$ |
+| $\rho\sigma\kappa_2$ | $\wedge(H-K_1)\kappa_1 = -(H-K_1)\,\rho\sigma\kappa_1\kappa_2$ | $-v_2R(K_2-K_1)(H-K_1)\,\rho\sigma\kappa_1\kappa_2$ |
+| $\rho\kappa_1\kappa_2$ | $\wedge H\sigma = +H\,\rho\sigma\kappa_1\kappa_2$ | $v_2R(K_2-K_1)H\,\rho\sigma\kappa_1\kappa_2$ |
+| $\sigma\kappa_1\kappa_2$ | $\wedge R\rho = -R\,\rho\sigma\kappa_1\kappa_2$ | $-v_2K_1(K_2-K_1)R\,\rho\sigma\kappa_1\kappa_2$ |
+
+The three $v_2$-carrying terms combine as $v_2R(K_2-K_1)\big[-(H-K_1)+H-K_1\big]=0$ — **they cancel completely**. What survives is:
+
+$$\Pi_1(x) = (K_2-K_1)(H-K_2)\big[K_1-R(s-v_1)\big]\,O\rho\sigma\kappa_1\kappa_2$$
+
+Dividing by $\Pi$:
+
+$$b = \frac{K_1-R(s-v_1)}{R(K_1-L)}$$
+
+$$b\ge0 \;\;\Longrightarrow\;\; v_1 \ge s-\frac{K_1}{R}$$
+
+This is exactly the single-option discounted-intrinsic-value lower bound, reappearing unchanged — and notably, $v_2$ drops out entirely. A clean consistency check.
+
+## Step 3 — Compute $\Pi_2(x) = O\,X(L)\,x\,X(K_2)\,X(H)$ (coefficient $c$ of $X(K_1)$)
+
+**First multiplication** — $(R\rho+L\sigma)\wedge(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$:
+
+| Term | Result | Kept? |
+|---|---|---|
+| $R\rho\wedge\rho$ | $0$ | vanishes |
+| $R\rho\wedge s\sigma$ | $Rs\,\rho\sigma$ | kept |
+| $R\rho\wedge v_1\kappa_1$ | $Rv_1\,\rho\kappa_1$ | kept |
+| $R\rho\wedge v_2\kappa_2$ | $Rv_2\,\rho\kappa_2$ | kept |
+| $L\sigma\wedge\rho$ | $-L\,\rho\sigma$ | kept |
+| $L\sigma\wedge s\sigma$ | $0$ | vanishes |
+| $L\sigma\wedge v_1\kappa_1$ | $Lv_1\,\sigma\kappa_1$ | kept |
+| $L\sigma\wedge v_2\kappa_2$ | $Lv_2\,\sigma\kappa_2$ | kept |
+
+$$= (Rs-L)\rho\sigma + Rv_1\,\rho\kappa_1 + Rv_2\,\rho\kappa_2 + Lv_1\,\sigma\kappa_1 + Lv_2\,\sigma\kappa_2$$
+
+**Second multiplication** — wedge with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$:
+
+| Source term | Surviving cross-term(s) | Result |
+|---|---|---|
+| $(Rs-L)\rho\sigma$ | $\wedge(K_2-K_1)\kappa_1$ | $(Rs-L)(K_2-K_1)\,\rho\sigma\kappa_1$ |
+| $Rv_1\,\rho\kappa_1$ | $\wedge K_2\sigma$ | $-Rv_1K_2\,\rho\sigma\kappa_1$ |
+| $Rv_2\,\rho\kappa_2$ | $\wedge K_2\sigma,\ \wedge(K_2-K_1)\kappa_1$ | $-Rv_2K_2\,\rho\sigma\kappa_2 - Rv_2(K_2-K_1)\,\rho\kappa_1\kappa_2$ |
+| $Lv_1\,\sigma\kappa_1$ | $\wedge R\rho$ | $Lv_1R\,\rho\sigma\kappa_1$ |
+| $Lv_2\,\sigma\kappa_2$ | $\wedge R\rho,\ \wedge(K_2-K_1)\kappa_1$ | $Lv_2R\,\rho\sigma\kappa_2 - Lv_2(K_2-K_1)\,\sigma\kappa_1\kappa_2$ |
+
+Collecting:
+
+$$\rho\sigma\kappa_1:\ \ (K_2-K_1)(Rs-L) - Rv_1(K_2-K_1) \qquad \rho\sigma\kappa_2:\ \ -Rv_2(K_2-K_1)$$
+$$\rho\kappa_1\kappa_2:\ \ -Rv_2(K_2-K_1) \qquad \sigma\kappa_1\kappa_2:\ \ -Lv_2(K_2-K_1)$$
+
+**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$, same complementary-vector rule as Step 2. Collecting all $v_2$ contributions:
+
+$$v_2\text{-terms}: \ -Rv_2(K_2-K_1)(H-K_1) + \big(-Rv_2(K_2-K_1)\big)\cdot H + \big(-Lv_2(K_2-K_1)\big)\cdot(-R)$$
+$$= Rv_2(K_2-K_1)\big[-(H-K_1)-H+L\big] = -Rv_2(K_2-K_1)(K_1-L)$$
+
+and the $v_1,s,L$ term:
+
+$$(K_2-K_1)\big[(Rs-L)-Rv_1\big](H-K_2)$$
+
+$$\Pi_2(x) = (K_2-K_1)\Big[(H-K_2)(Rs-L-Rv_1) - R(K_1-L)v_2\Big]\,O\rho\sigma\kappa_1\kappa_2$$
+
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)\,O\rho\sigma\kappa_1\kappa_2$:
+
+$$c = \frac{(H-K_2)(Rs-L-Rv_1) - R(K_1-L)v_2}{R(K_1-L)(H-K_2)}$$
+
+$c\ge0$ rearranges to:
+
+$$(K_2-L)v_1 - (K_1-L)v_2 \;\le\; (K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+A joint bound linking $v_1$ and $v_2$ — it only exists once both strikes are in the picture.
+
+## Step 4 — Compute $\Pi_3(x) = O\,X(L)\,X(K_1)\,x\,X(H)$ (coefficient $d$ of $X(K_2)$)
+
+**First multiplication** is the same as Step 1's: $(R\rho+L\sigma)\wedge(R\rho+K_1\sigma) = R(K_1-L)\,\rho\sigma$.
+
+**Second multiplication** — wedge with $x=(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$:
+
+| Term | Result | Kept? |
+|---|---|---|
+| $\rho\sigma\wedge\rho$ | $0$ | vanishes |
+| $\rho\sigma\wedge s\sigma$ | $0$ | vanishes |
+| $\rho\sigma\wedge v_1\kappa_1$ | $v_1\,\rho\sigma\kappa_1$ | kept |
+| $\rho\sigma\wedge v_2\kappa_2$ | $v_2\,\rho\sigma\kappa_2$ | kept |
+
+$$R(K_1-L)\,\rho\sigma \wedge x = R(K_1-L)\big[v_1\,\rho\sigma\kappa_1 + v_2\,\rho\sigma\kappa_2\big]$$
+
+**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$:
+
+$$v_1\,\rho\sigma\kappa_1\wedge(H-K_2)\kappa_2 = v_1(H-K_2)\,\rho\sigma\kappa_1\kappa_2$$
+$$v_2\,\rho\sigma\kappa_2\wedge(H-K_1)\kappa_1 = v_2(H-K_1)\,\rho\sigma\kappa_2\kappa_1 = -v_2(H-K_1)\,\rho\sigma\kappa_1\kappa_2$$
+
+$$\Pi_3(x) = R(K_1-L)\big[v_1(H-K_2)-v_2(H-K_1)\big]\,O\rho\sigma\kappa_1\kappa_2$$
+
+Dividing by $\Pi$:
+
+$$d = \frac{v_1(H-K_2)-v_2(H-K_1)}{(K_2-K_1)(H-K_2)}$$
+
+$$d\ge0 \;\;\Longrightarrow\;\; \boxed{v_1 \ge v_2\cdot\frac{H-K_1}{H-K_2}}$$
+
+This is the cross-strike relationship — it falls straight out of the coefficient calculation, no separate argument required. Since $H-K_1>H-K_2>0$, the ratio exceeds $1$, so this is strictly stronger than "$v_1\ge v_2$" (the lower-strike call must be worth more): it pins down exactly how much more.
+
+## Step 5 — Compute $\Pi_4(x) = O\,X(L)\,X(K_1)\,X(K_2)\,x$ (coefficient $e$ of $X(H)$)
+
+**First two multiplications** match Step 1 exactly, through $R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1$.
+
+**Third multiplication** — wedge with $x=(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$. Only the $v_2\kappa_2$ term avoids a repeat:
+
+$$R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1 \wedge v_2\kappa_2 = R(K_1-L)(K_2-K_1)v_2\,\rho\sigma\kappa_1\kappa_2$$
+
+Dividing by $\Pi$:
+
+$$e = \frac{v_2}{H-K_2} \ge 0 \;\;\Longrightarrow\;\; v_2\ge0$$
+
+The trivial bound — a call's payoff is never negative.
+
+## Combined result
+
+$$v_2\ge0 \qquad v_1 \ge v_2\cdot\frac{H-K_1}{H-K_2} \qquad v_1\ge s-\frac{K_1}{R} \qquad (K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+## Interpretation
+
+- **$v_2\ge0$**: trivial, same as the single-option case.
+- **Cross-strike bound**: obtained "for free" from the $d\ge0$ coefficient — no separate proof needed to see that the lower-strike option must cost more, and by how much.
+- **$v_1\ge s-K_1/R$**: the discounted-intrinsic-value lower bound reappears unchanged from the single-option case, independent of $v_2$ — a strong consistency check.
+- **Joint bound**: links $v_1$ and $v_2$ together; only appears once both strikes coexist.
+
+## Worked numeric example
+
+Take $L=80,\ K_1=100,\ K_2=110,\ H=130,\ R=1,\ s=105$:
+
+$$v_2\ge0 \qquad v_1\ge1.5\,v_2 \qquad v_1\ge5 \qquad 30v_1-20v_2\le250$$
+
+Testing $(v_1,v_2)=(10,0)$: the first three bounds pass, but $30(10)-20(0)=300>250$ — **violated**. Solving the underlying linear system directly for this $(v_1,v_2)$ confirms $c=-0.25<0$, matching exactly.
+
+Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)=240\le250$ ✓ — all four pass, so this pair is arbitrage-free.
