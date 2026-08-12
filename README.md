@@ -157,98 +157,58 @@ $$x = O + \rho + s\sigma + v_1\kappa_1 + v_2\kappa_2$$
 
 $$X(\omega) = O + R\rho + \omega\sigma + \max(\omega-K_1,0)\kappa_1 + \max(\omega-K_2,0)\kappa_2$$
 
-We pick four reference outcomes $L<K_1<K_2<H$. Since each $\max(\cdot,0)$ term is zero below its strike:
+We pick four reference outcomes $L<K_1<K_2<H$:
 
 $$X(L) = O+R\rho+L\sigma \qquad X(K_1) = O+R\rho+K_1\sigma$$
 $$X(K_2) = O+R\rho+K_2\sigma+(K_2-K_1)\kappa_1 \qquad X(H) = O+R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2$$
 
-Only $X(K_2)$ and $X(H)$ carry option components — $X(L)$ and $X(K_1)$ sit below both strikes, so neither option is in the money there.
+We write $x = a\,O + b\,X(L) + c\,X(K_1) + d\,X(K_2) + e\,X(H)$. Arbitrage-free requires $b,c,d,e\ge0$ (coefficient on $O$ unconstrained). Four instruments, four reference outcomes — this is exactly the "complete market" count, one dimension up from the single-option case.
 
-**Goal**: write $x = a\,O + b\,X(L) + c\,X(K_1) + d\,X(K_2) + e\,X(H)$. Arbitrage-free requires $b,c,d,e\ge0$.
+## The mechanical tool, via determinants
 
-## The computational tool
+With five points ($O$ plus four references), $\Pi = O\,X(L)\,X(K_1)\,X(K_2)\,X(H)$ is a 4-fold wedge in the direction space $(\rho,\sigma,\kappa_1,\kappa_2)$. A wedge product of $n$ vectors, given by their coordinates in a fixed basis, equals the determinant of the matrix whose rows are those coordinates, times the top-form (here $\rho\sigma\kappa_1\kappa_2$). This is the natural extension of the reduction-identity bookkeeping used for three vectors, and keeps calculations tractable as dimension grows — row operations (which leave a determinant unchanged) do the work that manually tracking permutation signs did before.
 
-Let $\Pi = O\,X(L)\,X(K_1)\,X(K_2)\,X(H)$. Replacing the $j$-th factor with $x$ gives $\Pi_j(x)$, and each coefficient is recovered by dividing by $\Pi$, exactly as before — just with one more factor in the product.
+Coordinates in the basis $(\rho,\sigma,\kappa_1,\kappa_2)$:
 
-Once the leading $O$ is factored out (using $O\wedge O=0$), we work with direction parts only:
+$$X(L)\to(R,L,0,0) \quad X(K_1)\to(R,K_1,0,0) \quad X(K_2)\to(R,K_2,K_2-K_1,0) \quad X(H)\to(R,H,H-K_1,H-K_2) \quad x\to(1,s,v_1,v_2)$$
 
-$$X(L)\to R\rho+L\sigma, \quad X(K_1)\to R\rho+K_1\sigma, \quad X(K_2)\to R\rho+K_2\sigma+(K_2-K_1)\kappa_1$$
-$$X(H)\to R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2, \quad x\to \rho+s\sigma+v_1\kappa_1+v_2\kappa_2$$
+## Step 1 — Compute $\Pi \leftrightarrow \det\big(X(L),X(K_1),X(K_2),X(H)\big)$
 
-Any wedge product with a repeated vector vanishes. The only surviving 4-fold products are permutations of $\rho\sigma\kappa_1\kappa_2$, with sign given by permutation parity. Identities used below:
+$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
 
-$$\rho\sigma\kappa_1\kappa_2=1,\quad \rho\kappa_1\sigma=-\rho\sigma\kappa_1,\quad \sigma\kappa_1\rho=+\rho\sigma\kappa_1,\quad \rho\kappa_2\sigma=-\rho\sigma\kappa_2,\quad \sigma\kappa_2\rho=+\rho\sigma\kappa_2$$
-$$\rho\kappa_1\kappa_2\sigma=+\rho\sigma\kappa_1\kappa_2, \quad \sigma\kappa_1\kappa_2\rho=-\rho\sigma\kappa_1\kappa_2, \quad \rho\sigma\kappa_2\kappa_1=-\rho\sigma\kappa_1\kappa_2$$
+Subtract row 1 from rows 2, 3, 4 (determinant unchanged):
 
-## Step 1 — Compute $\Pi = O\,X(L)\,X(K_1)\,X(K_2)\,X(H)$
+$$\begin{vmatrix} R&L&0&0\\ 0&K_1-L&0&0\\ 0&K_2-L&K_2-K_1&0\\ 0&H-L&H-K_1&H-K_2 \end{vmatrix}$$
 
-**First multiplication** — $(R\rho+L\sigma)\wedge(R\rho+K_1\sigma)$:
-
-| Term | Result | Kept? |
-|---|---|---|
-| $R\rho\wedge R\rho$ | $0$ | vanishes ($\rho$ repeats) |
-| $R\rho\wedge K_1\sigma$ | $RK_1\,\rho\sigma$ | kept |
-| $L\sigma\wedge R\rho$ | $-LR\,\rho\sigma$ | kept |
-| $L\sigma\wedge K_1\sigma$ | $0$ | vanishes ($\sigma$ repeats) |
-
-$$(R\rho+L\sigma)\wedge(R\rho+K_1\sigma) = R(K_1-L)\,\rho\sigma$$
-
-**Second multiplication** — wedge with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$. Since we already have $\rho\sigma$, only the $\kappa_1$ term avoids a repeat:
-
-$$R(K_1-L)\,\rho\sigma \wedge (K_2-K_1)\kappa_1 = R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1$$
-
-**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$. Only the $\kappa_2$ term avoids a repeat:
-
-$$R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1 \wedge (H-K_2)\kappa_2 = R(K_1-L)(K_2-K_1)(H-K_2)\,\rho\sigma\kappa_1\kappa_2$$
+Expanding along column 1, then the resulting matrix is lower-triangular — the determinant is the product of the diagonal entries:
 
 $$\boxed{\Pi = R(K_1-L)(K_2-K_1)(H-K_2)\; O\rho\sigma\kappa_1\kappa_2}$$
 
-Since $L<K_1<K_2<H$ and $R>0$, every factor is positive — **$\Pi$ is positive** this time (unlike the single-option case). No sign flips are needed when dividing by $\Pi$ below.
+Since $L<K_1<K_2<H$ and $R>0$, every factor is positive — **$\Pi$ is positive** here (unlike the single-option case, where it came out negative). No sign flips are needed when dividing by $\Pi$ below.
 
-## Step 2 — Compute $\Pi_1(x) = O\,x\,X(K_1)\,X(K_2)\,X(H)$ (coefficient $b$ of $X(L)$)
+## Step 2 — Compute $\Pi_1(x) \leftrightarrow \det\big(x,X(K_1),X(K_2),X(H)\big)$ (coefficient $b$ of $X(L)$)
 
-**First multiplication** — $(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)\wedge(R\rho+K_1\sigma)$:
+$$\begin{vmatrix} 1&s&v_1&v_2\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
 
-| Term | Result | Kept? |
-|---|---|---|
-| $\rho\wedge R\rho$ | $0$ | vanishes |
-| $\rho\wedge K_1\sigma$ | $K_1\,\rho\sigma$ | kept |
-| $s\sigma\wedge R\rho$ | $-sR\,\rho\sigma$ | kept |
-| $s\sigma\wedge K_1\sigma$ | $0$ | vanishes |
-| $v_1\kappa_1\wedge R\rho$ | $-v_1R\,\rho\kappa_1$ | kept |
-| $v_1\kappa_1\wedge K_1\sigma$ | $-v_1K_1\,\sigma\kappa_1$ | kept |
-| $v_2\kappa_2\wedge R\rho$ | $-v_2R\,\rho\kappa_2$ | kept |
-| $v_2\kappa_2\wedge K_1\sigma$ | $-v_2K_1\,\sigma\kappa_2$ | kept |
+Eliminate column 1 by subtracting $R\times$row 1 from rows 2–4:
 
-$$= (K_1-sR)\rho\sigma - v_1R\,\rho\kappa_1 - v_1K_1\,\sigma\kappa_1 - v_2R\,\rho\kappa_2 - v_2K_1\,\sigma\kappa_2$$
+$$\begin{vmatrix} 1&s&v_1&v_2\\ 0&K_1-Rs&-Rv_1&-Rv_2\\ 0&K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ 0&H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
 
-**Second multiplication** — wedge each term with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$, keeping only terms that avoid repeats:
+Expand along column 1, leaving the $3\times3$ minor. Subtract row 1 (of the minor) from rows 2, 3:
 
-| Source term | Surviving cross-term | Result |
-|---|---|---|
-| $(K_1-sR)\rho\sigma$ | $\wedge(K_2-K_1)\kappa_1$ | $(K_1-sR)(K_2-K_1)\,\rho\sigma\kappa_1$ |
-| $-v_1R\,\rho\kappa_1$ | $\wedge K_2\sigma$ | $+v_1RK_2\,\rho\sigma\kappa_1$ |
-| $-v_1K_1\,\sigma\kappa_1$ | $\wedge R\rho$ | $-v_1K_1R\,\rho\sigma\kappa_1$ |
-| $-v_2R\,\rho\kappa_2$ | $\wedge K_2\sigma,\ \wedge(K_2-K_1)\kappa_1$ | $v_2RK_2\,\rho\sigma\kappa_2 + v_2R(K_2-K_1)\,\rho\kappa_1\kappa_2$ |
-| $-v_2K_1\,\sigma\kappa_2$ | $\wedge R\rho,\ \wedge(K_2-K_1)\kappa_1$ | $-v_2K_1R\,\rho\sigma\kappa_2 + v_2K_1(K_2-K_1)\,\sigma\kappa_1\kappa_2$ |
+$$\begin{vmatrix} K_1-Rs&-Rv_1&-Rv_2\\ K_2-K_1&K_2-K_1&0\\ H-K_1&H-K_1&H-K_2 \end{vmatrix}$$
 
-Collecting by basis 3-vector:
+Expand along column 3 (only two nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
 
-$$\rho\sigma\kappa_1:\ \ (K_2-K_1)\big[K_1-R(s-v_1)\big] \qquad \rho\sigma\kappa_2:\ \ v_2R(K_2-K_1)$$
-$$\rho\kappa_1\kappa_2:\ \ v_2R(K_2-K_1) \qquad \sigma\kappa_1\kappa_2:\ \ v_2K_1(K_2-K_1)$$
+$$= -(-Rv_2)\begin{vmatrix}K_2-K_1&K_2-K_1\\H-K_1&H-K_1\end{vmatrix} + (H-K_2)\begin{vmatrix}K_1-Rs&-Rv_1\\K_2-K_1&K_2-K_1\end{vmatrix}$$
 
-**Third multiplication** — wedge each 3-vector term with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$, keeping only the complementary basis vector each time:
+The first $2\times2$ has identical columns (both $K_2-K_1$ vs $H-K_1$, but as a column pair $(K_2-K_1,H-K_1)$ appearing twice) — its determinant is $0$. The second:
 
-| Source 3-vector | Complementary term | Result |
-|---|---|---|
-| $\rho\sigma\kappa_1$ | $\wedge(H-K_2)\kappa_2$ | $(K_2-K_1)[K_1-R(s-v_1)](H-K_2)\,\rho\sigma\kappa_1\kappa_2$ |
-| $\rho\sigma\kappa_2$ | $\wedge(H-K_1)\kappa_1 = -(H-K_1)\,\rho\sigma\kappa_1\kappa_2$ | $-v_2R(K_2-K_1)(H-K_1)\,\rho\sigma\kappa_1\kappa_2$ |
-| $\rho\kappa_1\kappa_2$ | $\wedge H\sigma = +H\,\rho\sigma\kappa_1\kappa_2$ | $v_2R(K_2-K_1)H\,\rho\sigma\kappa_1\kappa_2$ |
-| $\sigma\kappa_1\kappa_2$ | $\wedge R\rho = -R\,\rho\sigma\kappa_1\kappa_2$ | $-v_2K_1(K_2-K_1)R\,\rho\sigma\kappa_1\kappa_2$ |
+$$(K_1-Rs)(K_2-K_1) - (-Rv_1)(K_2-K_1) = (K_2-K_1)\big[(K_1-Rs)+Rv_1\big] = (K_2-K_1)\big[K_1-R(s-v_1)\big]$$
 
-The three $v_2$-carrying terms combine as $v_2R(K_2-K_1)\big[-(H-K_1)+H-K_1\big]=0$ — **they cancel completely**. What survives is:
+So the $3\times3$ determinant is $(H-K_2)(K_2-K_1)\big[K_1-R(s-v_1)\big]$, and:
 
-$$\Pi_1(x) = (K_2-K_1)(H-K_2)\big[K_1-R(s-v_1)\big]\,O\rho\sigma\kappa_1\kappa_2$$
+$$\det\big(x,X(K_1),X(K_2),X(H)\big) = (K_2-K_1)(H-K_2)\big[K_1-R(s-v_1)\big]$$
 
 Dividing by $\Pi$:
 
@@ -256,54 +216,43 @@ $$b = \frac{K_1-R(s-v_1)}{R(K_1-L)}$$
 
 $$b\ge0 \;\;\Longrightarrow\;\; v_1 \ge s-\frac{K_1}{R}$$
 
-This is exactly the single-option discounted-intrinsic-value lower bound, reappearing unchanged — and notably, $v_2$ drops out entirely. A clean consistency check.
+This is exactly the single-option discounted-intrinsic-value lower bound, reappearing unchanged — and notably, $v_2$ doesn't appear at all. A strong consistency check.
 
-## Step 3 — Compute $\Pi_2(x) = O\,X(L)\,x\,X(K_2)\,X(H)$ (coefficient $c$ of $X(K_1)$)
+## Step 3 — Compute $\Pi_2(x) \leftrightarrow \det\big(X(L),x,X(K_2),X(H)\big)$ (coefficient $c$ of $X(K_1)$)
 
-**First multiplication** — $(R\rho+L\sigma)\wedge(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$:
+$$\begin{vmatrix} R&L&0&0\\ 1&s&v_1&v_2\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
 
-| Term | Result | Kept? |
-|---|---|---|
-| $R\rho\wedge\rho$ | $0$ | vanishes |
-| $R\rho\wedge s\sigma$ | $Rs\,\rho\sigma$ | kept |
-| $R\rho\wedge v_1\kappa_1$ | $Rv_1\,\rho\kappa_1$ | kept |
-| $R\rho\wedge v_2\kappa_2$ | $Rv_2\,\rho\kappa_2$ | kept |
-| $L\sigma\wedge\rho$ | $-L\,\rho\sigma$ | kept |
-| $L\sigma\wedge s\sigma$ | $0$ | vanishes |
-| $L\sigma\wedge v_1\kappa_1$ | $Lv_1\,\sigma\kappa_1$ | kept |
-| $L\sigma\wedge v_2\kappa_2$ | $Lv_2\,\sigma\kappa_2$ | kept |
+Use row 2 (leading $1$) to eliminate column 1: subtract $R\times$row 2 from rows 1, 3, 4:
 
-$$= (Rs-L)\rho\sigma + Rv_1\,\rho\kappa_1 + Rv_2\,\rho\kappa_2 + Lv_1\,\sigma\kappa_1 + Lv_2\,\sigma\kappa_2$$
+$$\begin{vmatrix} 0&L-Rs&-Rv_1&-Rv_2\\ 1&s&v_1&v_2\\ 0&K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ 0&H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
 
-**Second multiplication** — wedge with $(R\rho+K_2\sigma+(K_2-K_1)\kappa_1)$:
+Expand along column 1 — only row 2 is nonzero, at position $(2,1)$, giving sign $(-1)^{2+1}=-1$:
 
-| Source term | Surviving cross-term(s) | Result |
-|---|---|---|
-| $(Rs-L)\rho\sigma$ | $\wedge(K_2-K_1)\kappa_1$ | $(Rs-L)(K_2-K_1)\,\rho\sigma\kappa_1$ |
-| $Rv_1\,\rho\kappa_1$ | $\wedge K_2\sigma$ | $-Rv_1K_2\,\rho\sigma\kappa_1$ |
-| $Rv_2\,\rho\kappa_2$ | $\wedge K_2\sigma,\ \wedge(K_2-K_1)\kappa_1$ | $-Rv_2K_2\,\rho\sigma\kappa_2 - Rv_2(K_2-K_1)\,\rho\kappa_1\kappa_2$ |
-| $Lv_1\,\sigma\kappa_1$ | $\wedge R\rho$ | $Lv_1R\,\rho\sigma\kappa_1$ |
-| $Lv_2\,\sigma\kappa_2$ | $\wedge R\rho,\ \wedge(K_2-K_1)\kappa_1$ | $Lv_2R\,\rho\sigma\kappa_2 - Lv_2(K_2-K_1)\,\sigma\kappa_1\kappa_2$ |
+$$= -\begin{vmatrix} L-Rs&-Rv_1&-Rv_2\\ K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
 
-Collecting:
+Subtract row 1 from rows 2, 3:
 
-$$\rho\sigma\kappa_1:\ \ (K_2-K_1)(Rs-L) - Rv_1(K_2-K_1) \qquad \rho\sigma\kappa_2:\ \ -Rv_2(K_2-K_1)$$
-$$\rho\kappa_1\kappa_2:\ \ -Rv_2(K_2-K_1) \qquad \sigma\kappa_1\kappa_2:\ \ -Lv_2(K_2-K_1)$$
+$$= -\begin{vmatrix} L-Rs&-Rv_1&-Rv_2\\ K_2-L&K_2-K_1&0\\ H-L&H-K_1&H-K_2 \end{vmatrix}$$
 
-**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$, same complementary-vector rule as Step 2. Collecting all $v_2$ contributions:
+Expand along column 3 (nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
 
-$$v_2\text{-terms}: \ -Rv_2(K_2-K_1)(H-K_1) + \big(-Rv_2(K_2-K_1)\big)\cdot H + \big(-Lv_2(K_2-K_1)\big)\cdot(-R)$$
-$$= Rv_2(K_2-K_1)\big[-(H-K_1)-H+L\big] = -Rv_2(K_2-K_1)(K_1-L)$$
+$$= -\left[(-Rv_2)\begin{vmatrix}K_2-L&K_2-K_1\\H-L&H-K_1\end{vmatrix} + (H-K_2)\begin{vmatrix}L-Rs&-Rv_1\\K_2-L&K_2-K_1\end{vmatrix}\right]$$
 
-and the $v_1,s,L$ term:
+First $2\times2$: $(K_2-L)(H-K_1)-(K_2-K_1)(H-L)$. Expanding both products and simplifying (the $HK_2, HL, LK_2$ cross-terms cancel in pairs) gives $(K_1-L)(H-K_2)$.
 
-$$(K_2-K_1)\big[(Rs-L)-Rv_1\big](H-K_2)$$
+Second $2\times2$: $(L-Rs)(K_2-K_1)-(-Rv_1)(K_2-L) = (L-Rs)(K_2-K_1)+Rv_1(K_2-L)$.
 
-$$\Pi_2(x) = (K_2-K_1)\Big[(H-K_2)(Rs-L-Rv_1) - R(K_1-L)v_2\Big]\,O\rho\sigma\kappa_1\kappa_2$$
+$$= -\Big[-Rv_2(K_1-L)(H-K_2) + (H-K_2)\big[(L-Rs)(K_2-K_1)+Rv_1(K_2-L)\big]\Big]$$
 
-Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)\,O\rho\sigma\kappa_1\kappa_2$:
+$$= (H-K_2)\Big[Rv_2(K_1-L) + (Rs-L)(K_2-K_1) - Rv_1(K_2-L)\Big]$$
 
-$$c = \frac{(H-K_2)(Rs-L-Rv_1) - R(K_1-L)v_2}{R(K_1-L)(H-K_2)}$$
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)$:
+
+$$c = \frac{R\big[v_2(K_1-L)-v_1(K_2-L)\big] + (Rs-L)(K_2-K_1)}{R(K_1-L)(K_2-K_1)}$$
+
+Splitting the $(Rs-L)(K_2-K_1)$ term (its $R$ cancels against the denominator's $R$) gives the cleaner form:
+
+$$c = \frac{(K_2-K_1)(s-L/R) - \big[(K_2-L)v_1-(K_1-L)v_2\big]}{(K_1-L)(K_2-K_1)}$$
 
 $c\ge0$ rearranges to:
 
@@ -311,29 +260,19 @@ $$(K_2-L)v_1 - (K_1-L)v_2 \;\le\; (K_2-K_1)\left(s-\frac{L}{R}\right)$$
 
 A joint bound linking $v_1$ and $v_2$ — it only exists once both strikes are in the picture.
 
-## Step 4 — Compute $\Pi_3(x) = O\,X(L)\,X(K_1)\,x\,X(H)$ (coefficient $d$ of $X(K_2)$)
+## Step 4 — Compute $\Pi_3(x) \leftrightarrow \det\big(X(L),X(K_1),x,X(H)\big)$ (coefficient $d$ of $X(K_2)$)
 
-**First multiplication** is the same as Step 1's: $(R\rho+L\sigma)\wedge(R\rho+K_1\sigma) = R(K_1-L)\,\rho\sigma$.
+$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ 1&s&v_1&v_2\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
 
-**Second multiplication** — wedge with $x=(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$:
+Subtract row 1 from row 2: row 2 becomes $(0,K_1-L,0,0)$. Expand along row 2 — only entry $(2,2)=K_1-L$ is nonzero, sign $(-1)^{2+2}=+1$:
 
-| Term | Result | Kept? |
-|---|---|---|
-| $\rho\sigma\wedge\rho$ | $0$ | vanishes |
-| $\rho\sigma\wedge s\sigma$ | $0$ | vanishes |
-| $\rho\sigma\wedge v_1\kappa_1$ | $v_1\,\rho\sigma\kappa_1$ | kept |
-| $\rho\sigma\wedge v_2\kappa_2$ | $v_2\,\rho\sigma\kappa_2$ | kept |
+$$= (K_1-L)\begin{vmatrix} R&0&0\\ 1&v_1&v_2\\ R&H-K_1&H-K_2 \end{vmatrix}$$
 
-$$R(K_1-L)\,\rho\sigma \wedge x = R(K_1-L)\big[v_1\,\rho\sigma\kappa_1 + v_2\,\rho\sigma\kappa_2\big]$$
+Expand this $3\times3$ along the top row (only the leading $R$ is nonzero):
 
-**Third multiplication** — wedge with $(R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2)$:
+$$= (K_1-L)\cdot R\begin{vmatrix}v_1&v_2\\H-K_1&H-K_2\end{vmatrix} = (K_1-L)R\big[v_1(H-K_2)-v_2(H-K_1)\big]$$
 
-$$v_1\,\rho\sigma\kappa_1\wedge(H-K_2)\kappa_2 = v_1(H-K_2)\,\rho\sigma\kappa_1\kappa_2$$
-$$v_2\,\rho\sigma\kappa_2\wedge(H-K_1)\kappa_1 = v_2(H-K_1)\,\rho\sigma\kappa_2\kappa_1 = -v_2(H-K_1)\,\rho\sigma\kappa_1\kappa_2$$
-
-$$\Pi_3(x) = R(K_1-L)\big[v_1(H-K_2)-v_2(H-K_1)\big]\,O\rho\sigma\kappa_1\kappa_2$$
-
-Dividing by $\Pi$:
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)$:
 
 $$d = \frac{v_1(H-K_2)-v_2(H-K_1)}{(K_2-K_1)(H-K_2)}$$
 
@@ -341,13 +280,17 @@ $$d\ge0 \;\;\Longrightarrow\;\; \boxed{v_1 \ge v_2\cdot\frac{H-K_1}{H-K_2}}$$
 
 This is the cross-strike relationship — it falls straight out of the coefficient calculation, no separate argument required. Since $H-K_1>H-K_2>0$, the ratio exceeds $1$, so this is strictly stronger than "$v_1\ge v_2$" (the lower-strike call must be worth more): it pins down exactly how much more.
 
-## Step 5 — Compute $\Pi_4(x) = O\,X(L)\,X(K_1)\,X(K_2)\,x$ (coefficient $e$ of $X(H)$)
+## Step 5 — Compute $\Pi_4(x) \leftrightarrow \det\big(X(L),X(K_1),X(K_2),x\big)$ (coefficient $e$ of $X(H)$)
 
-**First two multiplications** match Step 1 exactly, through $R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1$.
+$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ 1&s&v_1&v_2 \end{vmatrix}$$
 
-**Third multiplication** — wedge with $x=(\rho+s\sigma+v_1\kappa_1+v_2\kappa_2)$. Only the $v_2\kappa_2$ term avoids a repeat:
+Same first step: subtract row 1 from row 2, giving $(0,K_1-L,0,0)$. Expanding along row 2:
 
-$$R(K_1-L)(K_2-K_1)\,\rho\sigma\kappa_1 \wedge v_2\kappa_2 = R(K_1-L)(K_2-K_1)v_2\,\rho\sigma\kappa_1\kappa_2$$
+$$= (K_1-L)\begin{vmatrix} R&0&0\\ R&K_2-K_1&0\\ 1&v_1&v_2 \end{vmatrix}$$
+
+This is lower-triangular after noting only the diagonal-ish structure contributes — expanding along the top row (only the leading $R$ survives, since the other two entries are $0$):
+
+$$= (K_1-L)\cdot R\begin{vmatrix}K_2-K_1&0\\v_1&v_2\end{vmatrix} = (K_1-L)R(K_2-K_1)v_2$$
 
 Dividing by $\Pi$:
 
@@ -375,3 +318,9 @@ $$v_2\ge0 \qquad v_1\ge1.5\,v_2 \qquad v_1\ge5 \qquad 30v_1-20v_2\le250$$
 Testing $(v_1,v_2)=(10,0)$: the first three bounds pass, but $30(10)-20(0)=300>250$ — **violated**. Solving the underlying linear system directly for this $(v_1,v_2)$ confirms $c=-0.25<0$, matching exactly.
 
 Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)=240\le250$ ✓ — all four pass, so this pair is arbitrage-free.
+
+## Why this matters for extending further
+
+The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
+
+
