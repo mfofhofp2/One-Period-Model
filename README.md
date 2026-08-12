@@ -174,11 +174,21 @@ $$X(L)\to(R,L,0,0) \quad X(K_1)\to(R,K_1,0,0) \quad X(K_2)\to(R,K_2,K_2-K_1,0) \
 
 ## Step 1 — Compute $\Pi \leftrightarrow \det\big(X(L),X(K_1),X(K_2),X(H)\big)$
 
-$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
 
 Subtract row 1 from rows 2, 3, 4 (determinant unchanged):
 
-$$\begin{vmatrix} R&L&0&0\\ 0&K_1-L&0&0\\ 0&K_2-L&K_2-K_1&0\\ 0&H-L&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| R    L      0        0     |
+| 0    K1-L   0        0     |
+| 0    K2-L   K2-K1    0     |
+| 0    H-L    H-K1     H-K2  |
+```
 
 Expanding along column 1, then the resulting matrix is lower-triangular — the determinant is the product of the diagonal entries:
 
@@ -188,19 +198,40 @@ Since $L<K_1<K_2<H$ and $R>0$, every factor is positive — **$\Pi$ is positive*
 
 ## Step 2 — Compute $\Pi_1(x) \leftrightarrow \det\big(x,X(K_1),X(K_2),X(H)\big)$ (coefficient $b$ of $X(L)$)
 
-$$\begin{vmatrix} 1&s&v_1&v_2\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| 1    s      v1       v2    |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
 
 Eliminate column 1 by subtracting $R\times$row 1 from rows 2–4:
 
-$$\begin{vmatrix} 1&s&v_1&v_2\\ 0&K_1-Rs&-Rv_1&-Rv_2\\ 0&K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ 0&H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
+```
+| 1    s        v1          v2        |
+| 0    K1-Rs    -Rv1        -Rv2      |
+| 0    K2-Rs    K2-K1-Rv1   -Rv2      |
+| 0    H-Rs     H-K1-Rv1    H-K2-Rv2  |
+```
 
 Expand along column 1, leaving the $3\times3$ minor. Subtract row 1 (of the minor) from rows 2, 3:
 
-$$\begin{vmatrix} K_1-Rs&-Rv_1&-Rv_2\\ K_2-K_1&K_2-K_1&0\\ H-K_1&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| K1-Rs    -Rv1     -Rv2   |
+| K2-K1    K2-K1    0      |
+| H-K1     H-K1     H-K2   |
+```
 
 Expand along column 3 (only two nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
 
-$$= -(-Rv_2)\begin{vmatrix}K_2-K_1&K_2-K_1\\H-K_1&H-K_1\end{vmatrix} + (H-K_2)\begin{vmatrix}K_1-Rs&-Rv_1\\K_2-K_1&K_2-K_1\end{vmatrix}$$
+$$= -(-Rv_2)\cdot M_1 + (H-K_2)\cdot M_2$$
+
+where the two $2\times2$ minors are:
+
+```
+M1 = | K2-K1   K2-K1 |      M2 = | K1-Rs   -Rv1  |
+     | H-K1    H-K1  |           | K2-K1   K2-K1 |
+```
 
 The first $2\times2$ has identical columns (both $K_2-K_1$ vs $H-K_1$, but as a column pair $(K_2-K_1,H-K_1)$ appearing twice) — its determinant is $0$. The second:
 
@@ -220,23 +251,48 @@ This is exactly the single-option discounted-intrinsic-value lower bound, reappe
 
 ## Step 3 — Compute $\Pi_2(x) \leftrightarrow \det\big(X(L),x,X(K_2),X(H)\big)$ (coefficient $c$ of $X(K_1)$)
 
-$$\begin{vmatrix} R&L&0&0\\ 1&s&v_1&v_2\\ R&K_2&K_2-K_1&0\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| R    L      0        0     |
+| 1    s      v1       v2    |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
 
 Use row 2 (leading $1$) to eliminate column 1: subtract $R\times$row 2 from rows 1, 3, 4:
 
-$$\begin{vmatrix} 0&L-Rs&-Rv_1&-Rv_2\\ 1&s&v_1&v_2\\ 0&K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ 0&H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
+```
+| 0    L-Rs     -Rv1        -Rv2      |
+| 1    s        v1          v2        |
+| 0    K2-Rs    K2-K1-Rv1   -Rv2      |
+| 0    H-Rs     H-K1-Rv1    H-K2-Rv2  |
+```
 
 Expand along column 1 — only row 2 is nonzero, at position $(2,1)$, giving sign $(-1)^{2+1}=-1$:
 
-$$= -\begin{vmatrix} L-Rs&-Rv_1&-Rv_2\\ K_2-Rs&K_2-K_1-Rv_1&-Rv_2\\ H-Rs&H-K_1-Rv_1&H-K_2-Rv_2 \end{vmatrix}$$
+```
+      | L-Rs    -Rv1        -Rv2      |
+ = -  | K2-Rs   K2-K1-Rv1   -Rv2      |
+      | H-Rs    H-K1-Rv1    H-K2-Rv2  |
+```
 
 Subtract row 1 from rows 2, 3:
 
-$$= -\begin{vmatrix} L-Rs&-Rv_1&-Rv_2\\ K_2-L&K_2-K_1&0\\ H-L&H-K_1&H-K_2 \end{vmatrix}$$
+```
+      | L-Rs    -Rv1     -Rv2   |
+ = -  | K2-L    K2-K1    0      |
+      | H-L     H-K1     H-K2   |
+```
 
 Expand along column 3 (nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
 
-$$= -\left[(-Rv_2)\begin{vmatrix}K_2-L&K_2-K_1\\H-L&H-K_1\end{vmatrix} + (H-K_2)\begin{vmatrix}L-Rs&-Rv_1\\K_2-L&K_2-K_1\end{vmatrix}\right]$$
+$$= -\Big[(-Rv_2)\cdot M_1 + (H-K_2)\cdot M_2\Big]$$
+
+where:
+
+```
+M1 = | K2-L   K2-K1 |      M2 = | L-Rs   -Rv1  |
+     | H-L    H-K1  |           | K2-L   K2-K1 |
+```
 
 First $2\times2$: $(K_2-L)(H-K_1)-(K_2-K_1)(H-L)$. Expanding both products and simplifying (the $HK_2, HL, LK_2$ cross-terms cancel in pairs) gives $(K_1-L)(H-K_2)$.
 
@@ -262,15 +318,28 @@ A joint bound linking $v_1$ and $v_2$ — it only exists once both strikes are i
 
 ## Step 4 — Compute $\Pi_3(x) \leftrightarrow \det\big(X(L),X(K_1),x,X(H)\big)$ (coefficient $d$ of $X(K_2)$)
 
-$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ 1&s&v_1&v_2\\ R&H&H-K_1&H-K_2 \end{vmatrix}$$
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| 1    s      v1       v2    |
+| R    H      H-K1     H-K2  |
+```
 
 Subtract row 1 from row 2: row 2 becomes $(0,K_1-L,0,0)$. Expand along row 2 — only entry $(2,2)=K_1-L$ is nonzero, sign $(-1)^{2+2}=+1$:
 
-$$= (K_1-L)\begin{vmatrix} R&0&0\\ 1&v_1&v_2\\ R&H-K_1&H-K_2 \end{vmatrix}$$
+```
+                | R    0        0     |
+ = (K1-L)  ×    | 1    v1       v2    |
+                | R    H-K1     H-K2  |
+```
 
 Expand this $3\times3$ along the top row (only the leading $R$ is nonzero):
 
-$$= (K_1-L)\cdot R\begin{vmatrix}v_1&v_2\\H-K_1&H-K_2\end{vmatrix} = (K_1-L)R\big[v_1(H-K_2)-v_2(H-K_1)\big]$$
+```
+                          | v1     v2   |
+ = (K1-L) · R  ×          | H-K1   H-K2 |
+   = (K1-L)R [v1(H-K2) - v2(H-K1)]
+```
 
 Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)$:
 
@@ -282,15 +351,28 @@ This is the cross-strike relationship — it falls straight out of the coefficie
 
 ## Step 5 — Compute $\Pi_4(x) \leftrightarrow \det\big(X(L),X(K_1),X(K_2),x\big)$ (coefficient $e$ of $X(H)$)
 
-$$\begin{vmatrix} R&L&0&0\\ R&K_1&0&0\\ R&K_2&K_2-K_1&0\\ 1&s&v_1&v_2 \end{vmatrix}$$
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| 1    s      v1       v2    |
+```
 
 Same first step: subtract row 1 from row 2, giving $(0,K_1-L,0,0)$. Expanding along row 2:
 
-$$= (K_1-L)\begin{vmatrix} R&0&0\\ R&K_2-K_1&0\\ 1&v_1&v_2 \end{vmatrix}$$
+```
+                | R    0        0   |
+ = (K1-L)  ×    | R    K2-K1    0   |
+                | 1    v1       v2  |
+```
 
 This is lower-triangular after noting only the diagonal-ish structure contributes — expanding along the top row (only the leading $R$ survives, since the other two entries are $0$):
 
-$$= (K_1-L)\cdot R\begin{vmatrix}K_2-K_1&0\\v_1&v_2\end{vmatrix} = (K_1-L)R(K_2-K_1)v_2$$
+```
+                          | K2-K1   0   |
+ = (K1-L) · R  ×          | v1      v2  |
+   = (K1-L) R (K2-K1) v2
+```
 
 Dividing by $\Pi$:
 
@@ -322,4 +404,5 @@ Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)
 ## Why this matters for extending further
 
 The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
+
 
