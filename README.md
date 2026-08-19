@@ -8,7 +8,7 @@ $$x = O + \rho + s\sigma + v\kappa$$
 
 $$X(\omega) = O + R\rho + \omega\sigma + \max(\omega-K,0)\kappa$$
 
-Here $O$ is a fixed origin, and $\rho, \sigma, \kappa$ are the direction vectors for the bond, stock, and option respectively (i.e. $\rho = $ bond$-O$, and so on). $x$ is the current price point; $X(\omega)$ is the terminal price point in outcome $\omega$.
+Here $O$ is a fixed origin, and $\rho, \sigma, \kappa$ are the direction vectors for the bond, stock, and option respectively (i.e. $\rho = \text{bond}-O$, and so on). $x$ is the current price point; $X(\omega)$ is the terminal price point in outcome $\omega$.
 
 We pick three reference outcomes $L < K < H$. Since $\max(\omega-K,0)=0$ whenever $\omega \le K$:
 
@@ -18,11 +18,11 @@ $$X(H) = O + R\rho + H\sigma + (H-K)\kappa$$
 
 Only $X(H)$ carries an option component, since only in that outcome does the call finish in the money.
 
-**Goal**: write $x = a\,O + b\,X(L) + c\,X(H) + d\,X(K)$. By the fundamental theorem of asset pricing, the model is arbitrage-free iff $b,c,d \ge 0$ (the coefficient on the origin $O$ is unconstrained — a cone doesn't restrict movement along its own apex direction).
+**Goal**: write $x = a·O + b·X(L) + c·X(H) + d·X(K)$. By the fundamental theorem of asset pricing, the model is arbitrage-free iff $b,c,d \ge 0$ (the coefficient on the origin $O$ is unconstrained — a cone doesn't restrict movement along its own apex direction).
 
 ## The computational tool
 
-Let $\Pi = O\,X(L)\,X(H)\,X(K)$. Replacing the $j$-th factor with $x$ gives $\Pi_j(x)$, and each coefficient is recovered by
+Let $\Pi = O·X(L)·X(H)·X(K)$. Replacing the $j$-th factor with $x$ gives $\Pi_j(x)$, and each coefficient is recovered by
 
 $$b = \frac{\Pi_1(x)}{\Pi}, \qquad c = \frac{\Pi_2(x)}{\Pi}, \qquad d = \frac{\Pi_3(x)}{\Pi}$$
 
@@ -34,22 +34,22 @@ Any wedge product where a vector repeats (e.g. $\rho\wedge\rho$, or $\rho\sigma\
 
 $$\rho\sigma\kappa=1,\quad \rho\kappa\sigma=-1,\quad \sigma\kappa\rho=+1,\quad \kappa\sigma\rho=-1,\quad \sigma\rho\kappa=-1,\quad \kappa\rho\sigma=+1$$
 
-## Step 1 — Compute $\Pi = O\,X(L)\,X(H)\,X(K)$
+## Step 1 — Compute Π = O·X(L)·X(H)·X(K)
 
 **First multiplication** — $(R\rho+L\sigma)\wedge(R\rho+H\sigma+(H-K)\kappa)$, expanded term by term (6 cross-terms from distributing $2\times3$):
 
 | Term | Result | Kept? |
 |---|---|---|
-| $R\rho\wedge R\rho$ | $R^2\,\rho\rho=0$ | vanishes ($\rho$ repeats) |
-| $R\rho\wedge H\sigma$ | $RH\,\rho\sigma$ | kept |
-| $R\rho\wedge(H-K)\kappa$ | $R(H-K)\,\rho\kappa$ | kept |
-| $L\sigma\wedge R\rho$ | $LR\,\sigma\rho=-LR\,\rho\sigma$ | kept |
-| $L\sigma\wedge H\sigma$ | $LH\,\sigma\sigma=0$ | vanishes ($\sigma$ repeats) |
-| $L\sigma\wedge(H-K)\kappa$ | $L(H-K)\,\sigma\kappa$ | kept |
+| $R\rho\wedge R\rho$ | $R^2\rho\rho=0$ | vanishes ($\rho$ repeats) |
+| $R\rho\wedge H\sigma$ | $RH\rho\sigma$ | kept |
+| $R\rho\wedge(H-K)\kappa$ | $R(H-K)\rho\kappa$ | kept |
+| $L\sigma\wedge R\rho$ | $LR\sigma\rho=-LR\rho\sigma$ | kept |
+| $L\sigma\wedge H\sigma$ | $LH\sigma\sigma=0$ | vanishes ($\sigma$ repeats) |
+| $L\sigma\wedge(H-K)\kappa$ | $L(H-K)\sigma\kappa$ | kept |
 
 Collecting the surviving terms:
 
-$$(R\rho+L\sigma)\wedge(R\rho+H\sigma+(H-K)\kappa) = (RH-LR)\,\rho\sigma + R(H-K)\,\rho\kappa + L(H-K)\,\sigma\kappa$$
+$$(R\rho+L\sigma)\wedge(R\rho+H\sigma+(H-K)\kappa) = (RH-LR)\rho\sigma + R(H-K)\rho\kappa + L(H-K)\sigma\kappa$$
 
 **Second multiplication** — wedge the above with $(R\rho+K\sigma)$ (6 more cross-terms):
 
@@ -58,26 +58,26 @@ $$(R\rho+L\sigma)\wedge(R\rho+H\sigma+(H-K)\kappa) = (RH-LR)\,\rho\sigma + R(H-K
 | $(RH-LR)\rho\sigma\wedge R\rho$ | $\rho\sigma\rho$ | vanishes ($\rho$ repeats) |
 | $(RH-LR)\rho\sigma\wedge K\sigma$ | $\rho\sigma\sigma$ | vanishes ($\sigma$ repeats) |
 | $R(H-K)\rho\kappa\wedge R\rho$ | $\rho\kappa\rho$ | vanishes ($\rho$ repeats) |
-| $R(H-K)\rho\kappa\wedge K\sigma$ | $R(H-K)K\,\rho\kappa\sigma = -R(H-K)K\,\rho\sigma\kappa$ | kept |
-| $L(H-K)\sigma\kappa\wedge R\rho$ | $L(H-K)R\,\sigma\kappa\rho = +L(H-K)R\,\rho\sigma\kappa$ | kept |
+| $R(H-K)\rho\kappa\wedge K\sigma$ | $R(H-K)K\rho\kappa\sigma = -R(H-K)K\rho\sigma\kappa$ | kept |
+| $L(H-K)\sigma\kappa\wedge R\rho$ | $L(H-K)R\sigma\kappa\rho = +L(H-K)R\rho\sigma\kappa$ | kept |
 | $L(H-K)\sigma\kappa\wedge K\sigma$ | $\sigma\kappa\sigma$ | vanishes ($\sigma$ repeats) |
 
 Summing the two surviving terms and factoring out $(H-K)$:
 
-$$\Pi = \big[-R(H-K)K + L(H-K)R\big]\,O\rho\sigma\kappa = R(H-K)(L-K)\,O\rho\sigma\kappa$$
+$$\Pi = \big[-R(H-K)K + L(H-K)R\big]O\rho\sigma\kappa = R(H-K)(L-K)O\rho\sigma\kappa$$
 
 Since $L<K<H$ and $R>0$: $(H-K)>0$, $(L-K)<0$, so **$\Pi$ is negative**. This sign carries through every coefficient computed by dividing by $\Pi$ below.
 
-## Step 2 — Compute $\Pi_1(x) = O\,x\,X(H)\,X(K)$ (coefficient of $X(L)$)
+## Step 2 — Compute Π1(x) = O·x·X(H)·X(K) (coefficient of X(L))
 
 $$(\rho+s\sigma+v\kappa)\wedge(R\rho+H\sigma+(H-K)\kappa) = (H-sR)\rho\sigma + (H-K-vR)\rho\kappa + (s(H-K)-vH)\sigma\kappa$$
 
 Wedge with $(R\rho+K\sigma)$, keeping only the cross terms:
 
-$$(H-K-vR)\rho\kappa\wedge K\sigma = -(H-K-vR)K\,\rho\sigma\kappa$$
-$$(s(H-K)-vH)\sigma\kappa\wedge R\rho = (s(H-K)-vH)R\,\rho\sigma\kappa$$
+$$(H-K-vR)\rho\kappa\wedge K\sigma = -(H-K-vR)K\rho\sigma\kappa$$
+$$(s(H-K)-vH)\sigma\kappa\wedge R\rho = (s(H-K)-vH)R\rho\sigma\kappa$$
 
-$$\Pi_1(x) = \big[-(H-K-vR)K + (s(H-K)-vH)R\big]\,O\rho\sigma\kappa = (H-K)\big[R(s-v)-K\big]\,O\rho\sigma\kappa$$
+$$\Pi_1(x) = \big[-(H-K-vR)K + (s(H-K)-vH)R\big]O\rho\sigma\kappa = (H-K)\big[R(s-v)-K\big]O\rho\sigma\kappa$$
 
 Dividing by $\Pi$:
 
@@ -85,27 +85,27 @@ $$b = \frac{R(s-v)-K}{R(L-K)}$$
 
 Since $R(L-K)<0$ (denominator negative), coefficient $\ge0$ requires the numerator $\le0$:
 
-$$R(s-v)-K\le0 \;\;\Longrightarrow\;\; v \ge s-\frac{K}{R}$$
+$$R(s-v)-K\le0  \Longrightarrow  v \ge s-\frac{K}{R}$$
 
 This is the discounted-intrinsic-value lower bound — it doesn't depend on $L$ or $H$ at all, which is a useful check: this bound must hold in *any* arbitrage-free model, not just this trinomial one.
 
-## Step 3 — Compute $\Pi_2(x) = O\,X(L)\,x\,X(K)$ (coefficient of $X(H)$)
+## Step 3 — Compute Π2(x) = O·X(L)·x·X(K) (coefficient of X(H))
 
-$$(R\rho+L\sigma)\wedge(\rho+s\sigma+v\kappa) = (Rs-L)\rho\sigma + Rv\,\rho\kappa + Lv\,\sigma\kappa$$
+$$(R\rho+L\sigma)\wedge(\rho+s\sigma+v\kappa) = (Rs-L)\rho\sigma + Rv\rho\kappa + Lv\sigma\kappa$$
 
 Wedge with $(R\rho+K\sigma)$:
 
-$$Rv\,\rho\kappa\wedge K\sigma = -RvK\,\rho\sigma\kappa \qquad Lv\,\sigma\kappa\wedge R\rho = LvR\,\rho\sigma\kappa$$
+$$Rv\rho\kappa\wedge K\sigma = -RvK\rho\sigma\kappa \qquad Lv\sigma\kappa\wedge R\rho = LvR\rho\sigma\kappa$$
 
-$$\Pi_2(x) = (LvR - RvK)\,O\rho\sigma\kappa = vR(L-K)\,O\rho\sigma\kappa$$
+$$\Pi_2(x) = (LvR - RvK)O\rho\sigma\kappa = vR(L-K)O\rho\sigma\kappa$$
 
-Dividing by $\Pi = R(H-K)(L-K)\,O\rho\sigma\kappa$ — the $(L-K)$ factor cancels directly, no sign flip needed here:
+Dividing by $\Pi = R(H-K)(L-K)O\rho\sigma\kappa$ — the $(L-K)$ factor cancels directly, no sign flip needed here:
 
-$$c = \frac{v}{H-K} \ge 0 \;\;\Longrightarrow\;\; v \ge 0$$
+$$c = \frac{v}{H-K} \ge 0  \Longrightarrow  v \ge 0$$
 
 The trivial bound: a call's payoff is never negative, so its price shouldn't be either.
 
-## Step 4 — Compute $\Pi_3(x) = O\,X(L)\,X(H)\,x$ (coefficient of $X(K)$)
+## Step 4 — Compute Π3(x) = O·X(L)·X(H)·x (coefficient of X(K))
 
 Reusing the intermediate result from Step 1:
 
@@ -113,11 +113,11 @@ $$(R\rho+L\sigma)\wedge(R\rho+H\sigma+(H-K)\kappa) = (RH-LR)\rho\sigma + R(H-K)\
 
 Wedge with $(\rho+s\sigma+v\kappa)$:
 
-$$(RH-LR)\rho\sigma\wedge v\kappa = (RH-LR)v\,\rho\sigma\kappa$$
-$$R(H-K)\rho\kappa\wedge s\sigma = -R(H-K)s\,\rho\sigma\kappa$$
-$$L(H-K)\sigma\kappa\wedge\rho = L(H-K)\,\rho\sigma\kappa$$
+$$(RH-LR)\rho\sigma\wedge v\kappa = (RH-LR)v\rho\sigma\kappa$$
+$$R(H-K)\rho\kappa\wedge s\sigma = -R(H-K)s\rho\sigma\kappa$$
+$$L(H-K)\sigma\kappa\wedge\rho = L(H-K)\rho\sigma\kappa$$
 
-$$\Pi_3(x) = \big[R(H-L)v - (H-K)(Rs-L)\big]\,O\rho\sigma\kappa$$
+$$\Pi_3(x) = \big[R(H-L)v - (H-K)(Rs-L)\big]O\rho\sigma\kappa$$
 
 Dividing by $\Pi$ (negative denominator):
 
@@ -125,11 +125,11 @@ $$d = \frac{R(H-L)v-(H-K)(Rs-L)}{R(H-K)(L-K)}$$
 
 Coefficient $\ge0$ requires the numerator $\le0$:
 
-$$R(H-L)v \le (H-K)(Rs-L) \;\;\Longrightarrow\;\; v \le \frac{(H-K)(Rs-L)}{R(H-L)}$$
+$$R(H-L)v \le (H-K)(Rs-L)  \Longrightarrow  v \le \frac{(H-K)(Rs-L)}{R(H-L)}$$
 
 ## Combined result
 
-$$\boxed{\max\left(0,\ s-\frac{K}{R}\right) \;\le\; v \;\le\; \frac{(H-K)(Rs-L)}{R(H-L)}}$$
+$$\boxed{\max\left(0,\ s-\frac{K}{R}\right)  \le  v  \le  \frac{(H-K)(Rs-L)}{R(H-L)}}$$
 
 ## Interpretation
 
@@ -489,7 +489,7 @@ Identical in form to the two-strike joint bound — $v_3$ does not appear. This 
 
 ## Step 4 — Coefficient d of X(K2) (the new, middle condition)
 
-$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big)$: rows 1, 2 ($X(L),X(K_1)$) agree in every $\kappa$-coordinate (both zero), so subtracting row 1 from row 2 collapses to $(0,K_1-L,0,0,0)$, exactly as in the two-strike Steps 4–5. Expanding along this row leaves a $4\times4$ determinant built from $R$ (row 1, reduced), $x$, $X(K_3)$, $X(H)$ — and because row 1 there is purely $(R,0,0,0)$ in the remaining coordinates, it collapses further to a $3\times3$ in $(v_1,v_2,v_3)$ vs. $(K_3-K_1,K_3-K_2,0)$ and $(H-K_1,H-K_2,H-K_3)$:
+$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big)$: rows 1 and 2 (X(L) and X(K_1)) agree in every $\kappa$-coordinate (both zero), so subtracting row 1 from row 2 collapses to $(0,K_1-L,0,0,0)$, exactly as in the two-strike Steps 4–5. Expanding along this row leaves a $4\times4$ determinant built from $R$ (row 1, reduced), $x$, $X(K_3)$, $X(H)$ — and because row 1 there is purely $(R,0,0,0)$ in the remaining coordinates, it collapses further to a $3\times3$ in $(v_1,v_2,v_3)$ vs. $(K_3-K_1,K_3-K_2,0)$ and $(H-K_1,H-K_2,H-K_3)$:
 
 $$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big) = R(K_1-L)\Big[v_1\big[(K_3-K_2)(H-K_3)\big] - v_2\big[(K_3-K_1)(H-K_3)\big] + v_3\big[(K_3-K_1)(H-K_2)-(K_3-K_2)(H-K_1)\big]\Big]$$
 
@@ -566,3 +566,12 @@ and the $n+2$ conditions split into three families: an endpoint pair ($v_1\ge s-
 $$v_i \le \frac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \qquad 2\le i\le n-1$$
 
 each depending only on its immediate neighbors $K_{i-1},K_i,K_{i+1}$. The mechanical recipe (row-reduce, expand, divide by $\Pi$) never changes — only the bookkeeping grows, and it grows in a strictly local, predictable way.
+
+## Conclusion
+
+What may be worth stating formally is a structural claim about the derivation method itself:
+
+**Proposition (locality of no-arbitrage conditions).** In the $n$-strike single-period model, the no-arbitrage condition on the coefficient attached to each reference outcome depends only on that outcome's immediate neighbors in the ordered chain $L,K_1,\ldots,K_n,H$ — never on more distant reference points. In particular, the condition at each interior strike $K_i$ ($2\le i\le n-1$) is exactly the discrete-convexity (butterfly-spread) inequality linking $K_{i-1},K_i,K_{i+1}$, and it is produced by the same mechanical coefficient-extraction used for every other bound, with no separate construction.
+
+This has been confirmed by direct computation for $n=1,2,3$ (Steps above), and checked numerically for $n=4$. The value of the proposition, if it holds in general, is not in any single inequality it produces — but in showing that a whole family of no-arbitrage relationships, including one that looks like it should need its own dedicated convexity argument, falls out of a single, uniform, mechanical procedure applied identically at every reference point.
+
