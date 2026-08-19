@@ -404,3 +404,262 @@ Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)
 ## Why this matters for extending further
 
 The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
+
+
+# Bond, Stock, Two Options — No-Arbitrage Bounds via Grassmann Algebra
+
+## Setup
+
+Four instruments: a bond with realized return $R$, a stock with current price $s$, and two call options with strikes $K_1<K_2$ and current prices $v_1,v_2$.
+
+$$x = O + \rho + s\sigma + v_1\kappa_1 + v_2\kappa_2$$
+
+$$X(\omega) = O + R\rho + \omega\sigma + \max(\omega-K_1,0)\kappa_1 + \max(\omega-K_2,0)\kappa_2$$
+
+We pick four reference outcomes $L<K_1<K_2<H$:
+
+$$X(L) = O+R\rho+L\sigma \qquad X(K_1) = O+R\rho+K_1\sigma$$
+$$X(K_2) = O+R\rho+K_2\sigma+(K_2-K_1)\kappa_1 \qquad X(H) = O+R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2$$
+
+We write $x = a×O + b×X(L) + c×X(K_1) + d×X(K_2) + e×X(H)$. Arbitrage-free requires $b,c,d,e\ge0$ (coefficient on $O$ unconstrained). Four instruments, four reference outcomes — this is exactly the "complete market" count, one dimension up from the single-option case.
+
+## The mechanical tool, via determinants
+
+With five points ($O$ plus four references), $\Pi = O×X(L)×X(K_1)×X(K_2)×X(H)$ is a 4-fold wedge in the direction space $(\rho,\sigma,\kappa_1,\kappa_2)$. A wedge product of $n$ vectors, given by their coordinates in a fixed basis, equals the determinant of the matrix whose rows are those coordinates, times the top-form (here $\rho\sigma\kappa_1\kappa_2$). This is the natural extension of the reduction-identity bookkeeping used for three vectors, and keeps calculations tractable as dimension grows — row operations (which leave a determinant unchanged) do the work that manually tracking permutation signs did before.
+
+Coordinates in the basis $(\rho,\sigma,\kappa_1,\kappa_2)$:
+
+$$X(L)\to(R,L,0,0) \quad X(K_1)\to(R,K_1,0,0) \quad X(K_2)\to(R,K_2,K_2-K_1,0) \quad X(H)\to(R,H,H-K_1,H-K_2) \quad x\to(1,s,v_1,v_2)$$
+
+## Step 1 — Compute Π <-> det(X(L),X(K1),X(K2),X(H))
+
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
+
+Subtract row 1 from rows 2, 3, 4 (determinant unchanged):
+
+```
+| R    L      0        0     |
+| 0    K1-L   0        0     |
+| 0    K2-L   K2-K1    0     |
+| 0    H-L    H-K1     H-K2  |
+```
+
+Expanding along column 1, then the resulting matrix is lower-triangular — the determinant is the product of the diagonal entries:
+
+$$\boxed{\Pi = R(K_1-L)(K_2-K_1)(H-K_2)\; O\rho\sigma\kappa_1\kappa_2}$$
+
+Since $L<K_1<K_2<H$ and $R>0$, every factor is positive — **$\Pi$ is positive** here (unlike the single-option case, where it came out negative). No sign flips are needed when dividing by $\Pi$ below.
+
+## Step 2 — Compute Π1(x) <-> det(x,X(K1),X(K2),X(H)) (coefficient b of X(L))
+
+```
+| 1    s      v1       v2    |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
+
+Eliminate column 1 by subtracting R×row 1 from rows 2–4:
+
+```
+| 1    s        v1          v2        |
+| 0    K1-Rs    -Rv1        -Rv2      |
+| 0    K2-Rs    K2-K1-Rv1   -Rv2      |
+| 0    H-Rs     H-K1-Rv1    H-K2-Rv2  |
+```
+
+Expand along column 1, leaving the $3\times3$ minor. Subtract row 1 (of the minor) from rows 2, 3:
+
+```
+| K1-Rs    -Rv1     -Rv2   |
+| K2-K1    K2-K1    0      |
+| H-K1     H-K1     H-K2   |
+```
+
+Expand along column 3 (only two nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
+
+$$= -(-Rv_2)\cdot M_1 + (H-K_2)\cdot M_2$$
+
+where the two $2\times2$ minors are:
+
+```
+M1 = | K2-K1   K2-K1 |      M2 = | K1-Rs   -Rv1  |
+     | H-K1    H-K1  |           | K2-K1   K2-K1 |
+```
+
+The first $2\times2$ has identical columns (both $K_2-K_1$ vs $H-K_1$, but as a column pair $(K_2-K_1,H-K_1)$ appearing twice) — its determinant is $0$. The second:
+
+$$(K_1-Rs)(K_2-K_1) - (-Rv_1)(K_2-K_1) = (K_2-K_1)\big[(K_1-Rs)+Rv_1\big] = (K_2-K_1)\big[K_1-R(s-v_1)\big]$$
+
+So the $3\times3$ determinant is $(H-K_2)(K_2-K_1)\big[K_1-R(s-v_1)\big]$, and:
+
+$$\det\big(x,X(K_1),X(K_2),X(H)\big) = (K_2-K_1)(H-K_2)\big[K_1-R(s-v_1)\big]$$
+
+Dividing by $\Pi$:
+
+$$b = \frac{K_1-R(s-v_1)}{R(K_1-L)}$$
+
+$$b\ge0 \;\;\Longrightarrow\;\; v_1 \ge s-\frac{K_1}{R}$$
+
+This is exactly the single-option discounted-intrinsic-value lower bound, reappearing unchanged — and notably, $v_2$ doesn't appear at all. A strong consistency check.
+
+## Step 3 — Compute Π2(x) <-> det(X(L),x,X(K2),X(H)) (coefficient c of X(K1))
+
+```
+| R    L      0        0     |
+| 1    s      v1       v2    |
+| R    K2     K2-K1    0     |
+| R    H      H-K1     H-K2  |
+```
+
+Use row 2 (leading $1$) to eliminate column 1: subtract R×row 2 from rows 1, 3, 4:
+
+```
+| 0    L-Rs     -Rv1        -Rv2      |
+| 1    s        v1          v2        |
+| 0    K2-Rs    K2-K1-Rv1   -Rv2      |
+| 0    H-Rs     H-K1-Rv1    H-K2-Rv2  |
+```
+
+Expand along column 1 — only row 2 is nonzero, at position $(2,1)$, giving sign $(-1)^{2+1}=-1$:
+
+```
+      | L-Rs    -Rv1        -Rv2      |
+ = -  | K2-Rs   K2-K1-Rv1   -Rv2      |
+      | H-Rs    H-K1-Rv1    H-K2-Rv2  |
+```
+
+Subtract row 1 from rows 2, 3:
+
+```
+      | L-Rs    -Rv1     -Rv2   |
+ = -  | K2-L    K2-K1    0      |
+      | H-L     H-K1     H-K2   |
+```
+
+Expand along column 3 (nonzero entries: $-Rv_2$ in row 1, $H-K_2$ in row 3):
+
+$$= -\Big[(-Rv_2)\cdot M_1 + (H-K_2)\cdot M_2\Big]$$
+
+where:
+
+```
+M1 = | K2-L   K2-K1 |      M2 = | L-Rs   -Rv1  |
+     | H-L    H-K1  |           | K2-L   K2-K1 |
+```
+
+First $2\times2$: $(K_2-L)(H-K_1)-(K_2-K_1)(H-L)$. Expanding both products and simplifying (the $HK_2, HL, LK_2$ cross-terms cancel in pairs) gives $(K_1-L)(H-K_2)$.
+
+Second $2\times2$: $(L-Rs)(K_2-K_1)-(-Rv_1)(K_2-L) = (L-Rs)(K_2-K_1)+Rv_1(K_2-L)$.
+
+$$= -\Big[-Rv_2(K_1-L)(H-K_2) + (H-K_2)\big[(L-Rs)(K_2-K_1)+Rv_1(K_2-L)\big]\Big]$$
+
+$$= (H-K_2)\Big[Rv_2(K_1-L) + (Rs-L)(K_2-K_1) - Rv_1(K_2-L)\Big]$$
+
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)$:
+
+$$c = \frac{R\big[v_2(K_1-L)-v_1(K_2-L)\big] + (Rs-L)(K_2-K_1)}{R(K_1-L)(K_2-K_1)}$$
+
+Splitting the $(Rs-L)(K_2-K_1)$ term (its $R$ cancels against the denominator's $R$) gives the cleaner form:
+
+$$c = \frac{(K_2-K_1)(s-L/R) - \big[(K_2-L)v_1-(K_1-L)v_2\big]}{(K_1-L)(K_2-K_1)}$$
+
+$c\ge0$ rearranges to:
+
+$$(K_2-L)v_1 - (K_1-L)v_2 \;\le\; (K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+A joint bound linking $v_1$ and $v_2$ — it only exists once both strikes are in the picture.
+
+## Step 4 — Compute Π3(x) <-> det(X(L),X(K1),x,X(H)) (coefficient d of X(K2))
+
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| 1    s      v1       v2    |
+| R    H      H-K1     H-K2  |
+```
+
+Subtract row 1 from row 2: row 2 becomes $(0,K_1-L,0,0)$. Expand along row 2 — only entry $(2,2)=K_1-L$ is nonzero, sign $(-1)^{2+2}=+1$:
+
+```
+                | R    0        0     |
+ = (K1-L)  ×    | 1    v1       v2    |
+                | R    H-K1     H-K2  |
+```
+
+Expand this $3\times3$ along the top row (only the leading $R$ is nonzero):
+
+```
+                          | v1     v2   |
+ = (K1-L) · R  ×          | H-K1   H-K2 |
+   = (K1-L)R [v1(H-K2) - v2(H-K1)]
+```
+
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(H-K_2)$:
+
+$$d = \frac{v_1(H-K_2)-v_2(H-K_1)}{(K_2-K_1)(H-K_2)}$$
+
+$$d\ge0 \;\;\Longrightarrow\;\; \boxed{v_1 \ge v_2\cdot\frac{H-K_1}{H-K_2}}$$
+
+This is the cross-strike relationship — it falls straight out of the coefficient calculation, no separate argument required. Since $H-K_1>H-K_2>0$, the ratio exceeds $1$, so this is strictly stronger than "$v_1\ge v_2$" (the lower-strike call must be worth more): it pins down exactly how much more.
+
+## Step 5 — Compute Π4(x) <-> det(X(L),X(K1),X(K2),x) (coefficient e of X(H))
+
+```
+| R    L      0        0     |
+| R    K1     0        0     |
+| R    K2     K2-K1    0     |
+| 1    s      v1       v2    |
+```
+
+Same first step: subtract row 1 from row 2, giving $(0,K_1-L,0,0)$. Expanding along row 2:
+
+```
+                | R    0        0   |
+ = (K1-L)  ×    | R    K2-K1    0   |
+                | 1    v1       v2  |
+```
+
+This is lower-triangular after noting only the diagonal-ish structure contributes — expanding along the top row (only the leading $R$ survives, since the other two entries are $0$):
+
+```
+                          | K2-K1   0   |
+ = (K1-L) · R  ×          | v1      v2  |
+   = (K1-L) R (K2-K1) v2
+```
+
+Dividing by $\Pi$:
+
+$$e = \frac{v_2}{H-K_2} \ge 0 \;\;\Longrightarrow\;\; v_2\ge0$$
+
+The trivial bound — a call's payoff is never negative.
+
+## Combined result
+
+$$v_2\ge0 \qquad v_1 \ge v_2\cdot\frac{H-K_1}{H-K_2} \qquad v_1\ge s-\frac{K_1}{R} \qquad (K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+## Interpretation
+
+- **$v_2\ge0$**: trivial, same as the single-option case.
+- **Cross-strike bound**: obtained "for free" from the $d\ge0$ coefficient — no separate proof needed to see that the lower-strike option must cost more, and by how much.
+- **$v_1\ge s-K_1/R$**: the discounted-intrinsic-value lower bound reappears unchanged from the single-option case, independent of $v_2$ — a strong consistency check.
+- **Joint bound**: links $v_1$ and $v_2$ together; only appears once both strikes coexist.
+
+## Worked numeric example
+
+Take $L=80,\ K_1=100,\ K_2=110,\ H=130,\ R=1,\ s=105$:
+
+$$v_2\ge0 \qquad v_1\ge1.5v_2 \qquad v_1\ge5 \qquad 30v_1-20v_2\le250$$
+
+Testing $(v_1,v_2)=(10,0)$: the first three bounds pass, but $30(10)-20(0)=300>250$ — **violated**. Solving the underlying linear system directly for this $(v_1,v_2)$ confirms $c=-0.25<0$, matching exactly.
+
+Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)=240\le250$ ✓ — all four pass, so this pair is arbitrage-free.
+
+## Why this matters for extending further
+
+The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
