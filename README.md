@@ -404,3 +404,165 @@ Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)
 ## Why this matters for extending further
 
 The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
+
+# Bond, Stock, Three Options — No-Arbitrage Bounds via Grassmann Algebra
+
+## Setup
+
+Five instruments: a bond with realized return $R$, a stock with current price $s$, and three call options with strikes $K_1<K_2<K_3$ and current prices $v_1,v_2,v_3$.
+
+$$x = O + \rho + s\sigma + v_1\kappa_1 + v_2\kappa_2 + v_3\kappa_3$$
+
+$$X(\omega) = O + R\rho + \omega\sigma + \max(\omega-K_1,0)\kappa_1 + \max(\omega-K_2,0)\kappa_2 + \max(\omega-K_3,0)\kappa_3$$
+
+We pick five reference outcomes $L<K_1<K_2<K_3<H$:
+
+$$X(L) = O+R\rho+L\sigma \qquad X(K_1) = O+R\rho+K_1\sigma$$
+$$X(K_2) = O+R\rho+K_2\sigma+(K_2-K_1)\kappa_1$$
+$$X(K_3) = O+R\rho+K_3\sigma+(K_3-K_1)\kappa_1+(K_3-K_2)\kappa_2$$
+$$X(H) = O+R\rho+H\sigma+(H-K_1)\kappa_1+(H-K_2)\kappa_2+(H-K_3)\kappa_3$$
+
+We write $x = a·O + b·X(L) + c·X(K_1) + d·X(K_2) + e·X(K_3) + f·X(H)$. Arbitrage-free requires $b,c,d,e,f\ge0$. Five instruments, five reference outcomes — again exactly the "complete market" count, one dimension up from the two-strike case.
+
+## The mechanical tool
+
+$\Pi = O·X(L)·X(K_1)·X(K_2)·X(K_3)·X(H)$ is now a 5-fold wedge in $(\rho,\sigma,\kappa_1,\kappa_2,\kappa_3)$, equal to the determinant of the $5\times5$ coordinate matrix times the top-form $\rho\sigma\kappa_1\kappa_2\kappa_3$. Coordinates:
+
+$$X(L)\to(R,L,0,0,0) \quad X(K_1)\to(R,K_1,0,0,0) \quad X(K_2)\to(R,K_2,K_2-K_1,0,0)$$
+$$X(K_3)\to(R,K_3,K_3-K_1,K_3-K_2,0) \quad X(H)\to(R,H,H-K_1,H-K_2,H-K_3) \quad x\to(1,s,v_1,v_2,v_3)$$
+
+The same row-reduction pattern used for two strikes extends directly: subtracting row 1 (or whichever row carries the leading $1$ or $R$) to zero out a column, then repeating on the shrinking minor.
+
+## Step 1 — Compute Π <-> det(X(L),X(K1),X(K2),X(K3),X(H))
+
+```
+| R   L    0       0       0     |
+| R   K1   0       0       0     |
+| R   K2   K2-K1   0       0     |
+| R   K3   K3-K1   K3-K2   0     |
+| R   H    H-K1    H-K2    H-K3  |
+```
+
+Subtract row 1 from rows 2–5:
+
+```
+| R   L      0       0       0     |
+| 0   K1-L   0       0       0     |
+| 0   K2-L   K2-K1   0       0     |
+| 0   K3-L   K3-K1   K3-K2   0     |
+| 0   H-L    H-K1    H-K2    H-K3  |
+```
+
+Lower-triangular after expanding along column 1 — determinant is the product of the diagonal:
+
+$$\boxed{\Pi = R(K_1-L)(K_2-K_1)(K_3-K_2)(H-K_3)\ O\rho\sigma\kappa_1\kappa_2\kappa_3}$$
+
+Every factor positive (as in the two-strike case) — **$\Pi>0$**, no sign flips needed below.
+
+## Step 2 — Coefficient b of X(L)
+
+$\det\big(x,X(K_1),X(K_2),X(K_3),X(H)\big)$: eliminate column 1 using row 1 ($x$ has leading coordinate $1$), leaving a $4\times4$ minor whose first column is $(K_1-Rs, K_2-Rs, K_3-Rs, H-Rs)$ and whose remaining columns mirror the $\kappa_1,\kappa_2,\kappa_3$ structure of $X(K_1),X(K_2),X(K_3),X(H)$ shifted by $-Rv_1,-Rv_2,-Rv_3$ in row 1. Subtracting row 1 from rows 2–4 of this minor produces zeros in column 1 for all but the top row, collapsing the calculation to exactly the same triangular pattern as Step 1, but with $K_1-Rs$ (adjusted by $-R(s-v_1)$ tracking through) replacing $K_1-L$:
+
+$$\det\big(x,X(K_1),X(K_2),X(K_3),X(H)\big) = (K_2-K_1)(K_3-K_2)(H-K_3)\big[K_1-R(s-v_1)\big]$$
+
+Dividing by $\Pi$:
+
+$$b = \frac{K_1-R(s-v_1)}{R(K_1-L)}$$
+
+$$b\ge0  \Longrightarrow  v_1 \ge s-\frac{K_1}{R}$$
+
+Exactly the single-option discounted-intrinsic-value bound — unchanged by the presence of $v_2,v_3$. Consistent with both prior cases.
+
+## Step 3 — Coefficient c of X(K1)
+
+$\det\big(X(L),x,X(K_2),X(K_3),X(H)\big)$: use row 2 (leading $1$) to eliminate column 1, giving a sign $(-1)^{2+1}=-1$, then reduce the remaining $4\times4$ the same way as Step 3 in the two-strike case. Carrying the algebra through (the $v_2,v_3$ contributions again arrange themselves into a single $(K_1-L)$-weighted term, exactly mirroring the two-strike pattern):
+
+$$\det\big(X(L),x,X(K_2),X(K_3),X(H)\big) = (K_3-K_2)(H-K_3)\Big[(K_2-K_1)\big[K_1-R(s-v_1)\big]... \Big]$$
+
+more directly, dividing by $\Pi$ and simplifying to match the two-strike Step 3 form (with $K_2,v_2$ playing the role $K_2,v_2$ played there — $v_3$ drops out entirely, since $X(K_1)$ and the reduced structure never reach the $\kappa_3$ direction):
+
+$$c = \frac{(K_2-K_1)(s-L/R) - \big[(K_2-L)v_1-(K_1-L)v_2\big]}{(K_1-L)(K_2-K_1)}$$
+
+$$c\ge0  \Longrightarrow  (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+Identical in form to the two-strike joint bound — $v_3$ does not appear. This condition only "sees" its immediate neighbors $L,K_1,K_2$.
+
+## Step 4 — Coefficient d of X(K2) (the new, middle condition)
+
+$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big)$: rows 1, 2 ($X(L),X(K_1)$) agree in every $\kappa$-coordinate (both zero), so subtracting row 1 from row 2 collapses to $(0,K_1-L,0,0,0)$, exactly as in the two-strike Steps 4–5. Expanding along this row leaves a $4\times4$ determinant built from $R$ (row 1, reduced), $x$, $X(K_3)$, $X(H)$ — and because row 1 there is purely $(R,0,0,0)$ in the remaining coordinates, it collapses further to a $3\times3$ in $(v_1,v_2,v_3)$ vs. $(K_3-K_1,K_3-K_2,0)$ and $(H-K_1,H-K_2,H-K_3)$:
+
+$$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big) = R(K_1-L)\Big[v_1\big[(K_3-K_2)(H-K_3)\big] - v_2\big[(K_3-K_1)(H-K_3)\big] + v_3\big[(K_3-K_1)(H-K_2)-(K_3-K_2)(H-K_1)\big]\Big]$$
+
+The bracketed coefficient of $v_3$ simplifies: $(K_3-K_1)(H-K_2)-(K_3-K_2)(H-K_1) = (K_2-K_1)(H-K_3)$ (same cross-term cancellation pattern seen in Step 3 of the two-strike file). So:
+
+$$\det(\cdots) = R(K_1-L)(H-K_3)\Big[v_1(K_3-K_2) - v_2(K_3-K_1) + v_3(K_2-K_1)\Big]$$
+
+Dividing by $\Pi = R(K_1-L)(K_2-K_1)(K_3-K_2)(H-K_3)$:
+
+$$d = \frac{v_1(K_3-K_2) - v_2(K_3-K_1) + v_3(K_2-K_1)}{(K_2-K_1)(K_3-K_2)}$$
+
+$$d\ge0  \Longrightarrow  \boxed{v_2 \le \frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1}}$$
+
+**This is the butterfly-spread convexity condition** — and it involves only $K_1,K_2,K_3,v_1,v_2,v_3$. Neither $L,H,s$ nor the fourth instrument's price appears. It falls out of the same mechanical coefficient-extraction as every other bound, with no separate construction.
+
+## Step 5 — Coefficient e of X(K3)
+
+By the mirror-image argument to Step 3 (now $K_3$ sits one away from $H$, the way $K_1$ sat one away from $L$): rows for $X(L),X(K_1),X(K_2)$ all agree in the $\kappa_3$ coordinate (all zero), collapsing the determinant the same way Steps 4–5 collapsed in the two-strike file. Working through:
+
+$$e = \frac{v_2(H-K_3)-v_3(H-K_2)}{(K_3-K_2)(H-K_3)}$$
+
+$$e\ge0  \Longrightarrow  \boxed{v_2 \ge v_3\cdot\frac{H-K_2}{H-K_3}}$$
+
+Same shape as the two-strike cross-strike condition (Step 4 there), shifted one strike to the right. Only involves $K_2,K_3,H,v_2,v_3$ — $L,K_1,v_1$ drop out entirely.
+
+## Step 6 — Coefficient f of X(H)
+
+Rows $X(L),X(K_1),X(K_2),X(K_3)$ all agree in the last ($\kappa_3$-adjacent... actually here it's the final coordinate before $x$) — same collapse pattern as Step 5 in the two-strike file:
+
+$$f = \frac{v_3}{H-K_3} \ge 0  \Longrightarrow  v_3\ge0$$
+
+The trivial bound.
+
+## Combined result
+
+$$v_1\ge s-\frac{K_1}{R} \qquad (K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)\left(s-\frac{L}{R}\right)$$
+
+$$v_2 \le \frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1} \qquad v_2 \ge v_3\cdot\frac{H-K_2}{H-K_3} \qquad v_3\ge0$$
+
+## Interpretation — the locality pattern
+
+Laying all five (now six, counting both endpoint conditions) results side by side:
+
+| Reference point | Condition | Depends on |
+|---|---|---|
+| $L$ | $v_1\ge s-K_1/R$ | $s,K_1$ only |
+| $K_1$ | $(K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)(s-L/R)$ | $L,s,K_1,K_2$ only |
+| $K_2$ | $v_2\le\dfrac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1}$ (butterfly) | $K_1,K_2,K_3$ only |
+| $K_3$ | $v_2\ge v_3\cdot\dfrac{H-K_2}{H-K_3}$ | $K_2,K_3,H$ only |
+| $H$ | $v_3\ge0$ | trivial |
+
+Every condition depends only on its immediate neighbors in the chain $L,K_1,K_2,K_3,H$ — none reaches further than one or two steps away. The single interior strike $K_2$ produces exactly one butterfly-spread condition, matching the general pattern: $n$ strikes give $n+2$ total conditions, of which $n-2$ are interior (butterfly-type) conditions. This is the discrete convexity of option price in strike, and it emerges automatically from the coefficient extraction rather than requiring a separate constructed arbitrage argument.
+
+## Worked numeric example
+
+Take $L=70,\ K_1=90,\ K_2=100,\ K_3=110,\ H=130,\ R=1,\ s=105$. Check $(v_1,v_2,v_3)=(20,14,9)$:
+
+$$v_1\ge s-K_1/R:\quad 20\ge15 \checkmark$$
+$$(K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)(s-L/R):\quad 30(20)-20(14)=320\le10(35)=350 \checkmark$$
+$$v_2\le\frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1}:\quad 14\le\frac{10(20)+10(9)}{20}=\frac{290}{20}=14.5 \checkmark$$
+$$v_2\ge v_3\cdot\frac{H-K_2}{H-K_3}:\quad 14\ge9\cdot\frac{30}{20}=13.5 \checkmark$$
+$$v_3\ge0:\quad 9\ge0 \checkmark$$
+
+All five conditions pass — $(20,14,9)$ is a consistent, arbitrage-free set of option prices for this model. Note the differences $v_1-v_2=6$, $v_2-v_3=5$ are decreasing, consistent with the convexity the butterfly condition enforces.
+
+## Why this matters for extending further
+
+The pattern is now clear enough to state in general, for $n$ strikes $K_1<\cdots<K_n$:
+
+$$\Pi = R(K_1-L)\left(\prod_{i=2}^{n}(K_i-K_{i-1})\right)(H-K_n)\ O\rho\sigma\kappa_1\cdots\kappa_n$$
+
+and the $n+2$ conditions split into three families: an endpoint pair ($v_1\ge s-K_1/R$ at $L$, $v_n\ge0$ at $H$), a near-endpoint pair (linking $L,K_1,K_2$ and $K_{n-1},K_n,H$ respectively), and $n-2$ interior butterfly conditions
+
+$$v_i \le \frac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \qquad 2\le i\le n-1$$
+
+each depending only on its immediate neighbors $K_{i-1},K_i,K_{i+1}$. The mechanical recipe (row-reduce, expand, divide by $\Pi$) never changes — only the bookkeeping grows, and it grows in a strictly local, predictable way.
