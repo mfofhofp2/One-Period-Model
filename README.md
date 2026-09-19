@@ -146,6 +146,7 @@ $$\text{Upper bound} = \frac{(110-100)(1\cdot100-90)}{1\cdot(110-90)} = \frac{10
 
 So the no-arbitrage range for this option's price is $0 \le v \le 5$.
 
+---
 
 # Bond, Stock, Two Options — No-Arbitrage Bounds via Grassmann Algebra
 
@@ -405,6 +406,8 @@ Testing $(v_1,v_2)=(8,3)$: $3\ge0$ ✓, $8\ge4.5$ ✓, $8\ge5$ ✓, $30(8)-20(3)
 
 The same recipe — one more reference outcome, one more row/column in the determinant — extends to any number of strikes $K_1<\cdots<K_n$. The row-reduction pattern seen throughout (subtracting row 1 to zero out a column, then repeating on the shrinking minor) stays mechanical regardless of how large the matrix gets, though the joint bound analogous to Step 3's condition will involve more cross-terms with each additional strike.
 
+---
+
 # Bond, Stock, Three Options — No-Arbitrage Bounds via Grassmann Algebra
 
 ## Setup
@@ -477,10 +480,6 @@ Exactly the single-option discounted-intrinsic-value bound — unchanged by the 
 
 $\det\big(X(L),x,X(K_2),X(K_3),X(H)\big)$: use row 2 (leading $1$) to eliminate column 1, giving a sign $(-1)^{2+1}=-1$, then reduce the remaining $4\times4$ the same way as Step 3 in the two-strike case. Carrying the algebra through (the $v_2,v_3$ contributions again arrange themselves into a single $(K_1-L)$-weighted term, exactly mirroring the two-strike pattern):
 
-$$\det\big(X(L),x,X(K_2),X(K_3),X(H)\big) = (K_3-K_2)(H-K_3)\Big[(K_2-K_1)\big[K_1-R(s-v_1)\big]... \Big]$$
-
-more directly, dividing by $\Pi$ and simplifying to match the two-strike Step 3 form (with $K_2,v_2$ playing the role $K_2,v_2$ played there — $v_3$ drops out entirely, since $X(K_1)$ and the reduced structure never reach the $\kappa_3$ direction):
-
 $$c = \frac{(K_2-K_1)(s-L/R) - \big[(K_2-L)v_1-(K_1-L)v_2\big]}{(K_1-L)(K_2-K_1)}$$
 
 $$c\ge0  \Longrightarrow  (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\frac{L}{R}\right)$$
@@ -489,15 +488,7 @@ Identical in form to the two-strike joint bound — $v_3$ does not appear. This 
 
 ## Step 4 — Coefficient d of X(K2) (the new, middle condition)
 
-$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big)$: rows 1 and 2 (X(L) and X(K_1)) agree in every $\kappa$-coordinate (both zero), so subtracting row 1 from row 2 collapses to $(0,K_1-L,0,0,0)$, exactly as in the two-strike Steps 4–5. Expanding along this row leaves a $4\times4$ determinant built from $R$ (row 1, reduced), $x$, $X(K_3)$, $X(H)$ — and because row 1 there is purely $(R,0,0,0)$ in the remaining coordinates, it collapses further to a $3\times3$ in $(v_1,v_2,v_3)$ vs. $(K_3-K_1,K_3-K_2,0)$ and $(H-K_1,H-K_2,H-K_3)$:
-
-$$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big) = R(K_1-L)\Big[v_1\big[(K_3-K_2)(H-K_3)\big] - v_2\big[(K_3-K_1)(H-K_3)\big] + v_3\big[(K_3-K_1)(H-K_2)-(K_3-K_2)(H-K_1)\big]\Big]$$
-
-The bracketed coefficient of $v_3$ simplifies: $(K_3-K_1)(H-K_2)-(K_3-K_2)(H-K_1) = (K_2-K_1)(H-K_3)$ (same cross-term cancellation pattern seen in Step 3 of the two-strike file). So:
-
-$$\det(\cdots) = R(K_1-L)(H-K_3)\Big[v_1(K_3-K_2) - v_2(K_3-K_1) + v_3(K_2-K_1)\Big]$$
-
-Dividing by $\Pi = R(K_1-L)(K_2-K_1)(K_3-K_2)(H-K_3)$:
+$\det\big(X(L),X(K_1),x,X(K_3),X(H)\big)$: rows 1 and 2 ($X(L)$ and $X(K_1)$) agree in every $\kappa$-coordinate (both zero), so subtracting row 1 from row 2 collapses to $(0,K_1-L,0,0,0)$, exactly as in the two-strike case. Working through the resulting reduced determinant:
 
 $$d = \frac{v_1(K_3-K_2) - v_2(K_3-K_1) + v_3(K_2-K_1)}{(K_2-K_1)(K_3-K_2)}$$
 
@@ -507,17 +498,17 @@ $$d\ge0  \Longrightarrow  \boxed{v_2 \le \frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_
 
 ## Step 5 — Coefficient e of X(K3)
 
-By the mirror-image argument to Step 3 (now $K_3$ sits one away from $H$, the way $K_1$ sat one away from $L$): rows for $X(L),X(K_1),X(K_2)$ all agree in the $\kappa_3$ coordinate (all zero), collapsing the determinant the same way Steps 4–5 collapsed in the two-strike file. Working through:
+By the mirror-image argument to Step 3: rows for $X(L),X(K_1),X(K_2)$ all agree in the $\kappa_3$ coordinate (all zero), collapsing the determinant the same way. Working through:
 
 $$e = \frac{v_2(H-K_3)-v_3(H-K_2)}{(K_3-K_2)(H-K_3)}$$
 
 $$e\ge0  \Longrightarrow  \boxed{v_2 \ge v_3\cdot\frac{H-K_2}{H-K_3}}$$
 
-Same shape as the two-strike cross-strike condition (Step 4 there), shifted one strike to the right. Only involves $K_2,K_3,H,v_2,v_3$ — $L,K_1,v_1$ drop out entirely.
+Same shape as the two-strike cross-strike condition, shifted one strike to the right. Only involves $K_2,K_3,H,v_2,v_3$ — $L,K_1,v_1$ drop out entirely.
 
 ## Step 6 — Coefficient f of X(H)
 
-Rows $X(L),X(K_1),X(K_2),X(K_3)$ all agree in the last ($\kappa_3$-adjacent... actually here it's the final coordinate before $x$) — same collapse pattern as Step 5 in the two-strike file:
+Rows $X(L),X(K_1),X(K_2),X(K_3)$ all agree in the last coordinate before $x$ — same collapse pattern:
 
 $$f = \frac{v_3}{H-K_3} \ge 0  \Longrightarrow  v_3\ge0$$
 
@@ -531,7 +522,7 @@ $$v_2 \le \frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1} \qquad v_2 \ge v_3\cdot\frac
 
 ## Interpretation — the locality pattern
 
-Laying all five (now six, counting both endpoint conditions) results side by side:
+Laying all five results side by side:
 
 | Reference point | Condition | Depends on |
 |---|---|---|
@@ -541,7 +532,7 @@ Laying all five (now six, counting both endpoint conditions) results side by sid
 | $K_3$ | $v_2\ge v_3\cdot\dfrac{H-K_2}{H-K_3}$ | $K_2,K_3,H$ only |
 | $H$ | $v_3\ge0$ | trivial |
 
-Every condition depends only on its immediate neighbors in the chain $L,K_1,K_2,K_3,H$ — none reaches further than one or two steps away. The single interior strike $K_2$ produces exactly one butterfly-spread condition, matching the general pattern: $n$ strikes give $n+2$ total conditions, of which $n-2$ are interior (butterfly-type) conditions. This is the discrete convexity of option price in strike, and it emerges automatically from the coefficient extraction rather than requiring a separate constructed arbitrage argument.
+Every condition depends only on its immediate neighbors in the chain $L,K_1,K_2,K_3,H$ — none reaches further than one or two steps away. The single interior strike $K_2$ produces exactly one butterfly-spread condition, matching the general pattern: $n$ strikes give $n+2$ total conditions, of which $n-2$ are interior (butterfly-type) conditions.
 
 ## Worked numeric example
 
@@ -549,29 +540,130 @@ Take $L=70,\ K_1=90,\ K_2=100,\ K_3=110,\ H=130,\ R=1,\ s=105$. Check $(v_1,v_2,
 
 $$v_1\ge s-K_1/R:\quad 20\ge15 \checkmark$$
 $$(K_2-L)v_1-(K_1-L)v_2\le(K_2-K_1)(s-L/R):\quad 30(20)-20(14)=320\le10(35)=350 \checkmark$$
-$$v_2\le\frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1}:\quad 14\le\frac{10(20)+10(9)}{20}=\frac{290}{20}=14.5 \checkmark$$
+$$v_2\le\frac{(K_3-K_2)v_1+(K_2-K_1)v_3}{K_3-K_1}:\quad 14\le\frac{10(20)+10(9)}{20}=14.5 \checkmark$$
 $$v_2\ge v_3\cdot\frac{H-K_2}{H-K_3}:\quad 14\ge9\cdot\frac{30}{20}=13.5 \checkmark$$
 $$v_3\ge0:\quad 9\ge0 \checkmark$$
 
-All five conditions pass — $(20,14,9)$ is a consistent, arbitrage-free set of option prices for this model. Note the differences $v_1-v_2=6$, $v_2-v_3=5$ are decreasing, consistent with the convexity the butterfly condition enforces.
+All five conditions pass — $(20,14,9)$ is a consistent, arbitrage-free set of option prices for this model.
 
-## Why this matters for extending further
+---
 
-The pattern is now clear enough to state in general, for $n$ strikes $K_1<\cdots<K_n$:
+# General $n$ Strikes — The Full Characterization
 
-$$\Pi = R(K_1-L)\left(\prod_{i=2}^{n}(K_i-K_{i-1})\right)(H-K_n)\ O\rho\sigma\kappa_1\cdots\kappa_n$$
+The three worked examples above suggest a conjecture: every no-arbitrage coefficient is *local*, depending only on its immediate neighbors in the chain $L,K_1,\ldots,K_n,H$, with the interior coefficients taking the form of a discrete-convexity ("butterfly") condition. This section states and proves that conjecture for arbitrary $n$.
 
-and the $n+2$ conditions split into three families: an endpoint pair ($v_1\ge s-K_1/R$ at $L$, $v_n\ge0$ at $H$), a near-endpoint pair (linking $L,K_1,K_2$ and $K_{n-1},K_n,H$ respectively), and $n-2$ interior butterfly conditions
+## Setup, general $n$
 
-$$v_i \le \frac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \qquad 2\le i\le n-1$$
+Reference outcomes $L=Y_0 < Y_1 < \cdots < Y_n < Y_{n+1}=H$, where $Y_j=K_j$ for $1\le j\le n$. Generators:
 
-each depending only on its immediate neighbors $K_{i-1},K_i,K_{i+1}$. The mechanical recipe (row-reduce, expand, divide by $\Pi$) never changes — only the bookkeeping grows, and it grows in a strictly local, predictable way.
+$$x = O+\rho+s\sigma+\sum_{j=1}^n v_j\kappa_j, \qquad X(Y_p) = O+R\rho+Y_p\sigma+\sum_{m=1}^n\max(Y_p-K_m,0)\,\kappa_m$$
+
+Write $x = a\,O + \sum_{p=0}^{n+1} b_p\,X(Y_p)$ (so $b_0=b_L$, $b_{n+1}=b_H$). Arbitrage-free $\iff$ every $b_p\ge0$.
+
+## Theorem 1. Closed-form determinant
+
+$$\Pi := O\wedge X(Y_0)\wedge\cdots\wedge X(Y_{n+1}) = R\,(K_1-L)\left(\prod_{i=2}^n(K_i-K_{i-1})\right)(H-K_n)\ \, O\rho\sigma\kappa_1\cdots\kappa_n$$
+
+**Proof.** By induction on $n$. The $(n{+}1)$-strike determinant factors as $(H-K_n)$ times the $n$-strike determinant with $K_n$ substituted for $H$ — the same "peel off the last strike" row-reduction carried out by hand for $n=2,3$ above, generalized to arbitrary $n$. Concretely, expanding along the row corresponding to $\kappa_n$ isolates a single nonzero cofactor (since every generator except $X(H)$ has zero $\kappa_n$-coordinate), whose value is exactly $H-K_n$, and the remaining minor is precisely the $n$-strike matrix with $H$ replaced by $K_n$. $\blacksquare$
+
+Since $L<K_1<\cdots<K_n<H$ and $R>0$, every factor is strictly positive, so $\Pi\ne0$ for every $n$.
+
+## Theorem 2. FTAP at the cone level
+
+Since $\Pi\ne0$, the $n+2$ generators are linearly independent, giving a linear isomorphism $\mathbb{R}^{n+2}\to\mathbb{R}^{n+2}$ under which the non-negative orthant maps to a closed convex cone $C$. A separating-hyperplane argument then gives, for every $n$:
+
+$$\text{no-arbitrage at } x \iff x\in C$$
+
+This is the abstract Fundamental Theorem of Asset Pricing, valid for arbitrary $n$. It confirms *existence* of a non-negative decomposition but does not yet hand back the explicit inequalities that Theorem 3 supplies.
+
+## Theorem 3. The full local characterization
+
+$$\text{no-arbitrage} \iff b_p\ge0 \text{ for every } p=0,1,\ldots,n+1$$
+
+with each condition depending only on immediate neighbors — the exact conditions, and which ones exist, depend on $n$:
+
+$$\boxed{\begin{array}{ll}
+b_L\ge0 &\iff v_1\ge s-\dfrac{K_1}{R} \\[6pt]
+b_{K_1}\ge0 &\iff (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\dfrac{L}{R}\right) \qquad (n\ge2)\\[6pt]
+b_{K_i}\ge0 &\iff v_i \le \dfrac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \quad 2\le i\le n-1 \qquad (n\ge3)\\[6pt]
+b_{K_n}\ge0 &\iff v_{n-1}\ge v_n\cdot\dfrac{H-K_{n-1}}{H-K_n} \qquad (n\ge2)\\[6pt]
+b_H\ge0 &\iff v_n\ge0
+\end{array}}$$
+
+For $n=1$ there is no interior condition and $K_1=K_n$ is simultaneously the near-$L$ and near-$H$ boundary strike, so the single condition on $b_{K_1}$ is derived on its own — it is exactly the $n=1$ worked example's coefficient $d$ above. For $n=2$, both boundary formulas apply directly and there is still no interior condition (matching the two-strike worked example above exactly). The general boundary and interior formulas are stated for $n\ge3$, matching the three-strike worked example as the base case.
+
+### Proof: a direct linear-system argument
+
+Rather than expand a large determinant and its cofactors for each coefficient separately — the natural but unwieldy generalization of the hand-computations above — the cleanest route is to solve the defining linear system directly.
+
+**Setting up the system.** Matching coordinates in $x = a\,O+\sum_{p=0}^{n+1}b_p X(Y_p)$ against $x=O+\rho+s\sigma+\sum_m v_m\kappa_m$ and $X(Y_p)=O+R\rho+Y_p\sigma+\sum_m\max(Y_p-K_m,0)\kappa_m$ gives, coordinate by coordinate:
+
+$$\rho:\quad \sum_{p=0}^{n+1} b_p = \frac1R \qquad\qquad \sigma:\quad \sum_{p=0}^{n+1} b_p Y_p = s$$
+
+$$\kappa_m\ (1\le m\le n):\quad \sum_{p:\,Y_p>K_m} b_p\,(Y_p-K_m) = v_m$$
+
+(the $O$-coordinate equation only pins down $a$ and plays no further role). This is $n+2$ equations in the $n+2$ unknowns $b_0,\ldots,b_{n+1}$; Theorem 1 guarantees a unique solution.
+
+**Solving by substitution.** Define the tail sum $S_m := \sum_{p=m+1}^{n+1} b_p$ for $m=0,1,\ldots,n$ (so $S_n=b_{n+1}=b_H$, and $S_0=\frac1R-b_L$). The $\kappa_m$-equation reads $v_m = T_m - K_mS_m$ where $T_m:=\sum_{p>m}b_pY_p$.
+
+*Step 1 (rightmost strike).* For $m=n$: only $p=n+1$ survives the sum, giving $v_n = b_{n+1}(H-K_n)$, i.e.
+
+$$b_H = \frac{v_n}{H-K_n} \implies b_H\ge0\iff v_n\ge0$$
+
+*Step 2 (consecutive-difference telescoping).* For $1\le m\le n-1$, subtract the $\kappa_{m+1}$-equation from the $\kappa_m$-equation. Using $T_m-T_{m+1}=b_{m+1}Y_{m+1}$, $S_m-S_{m+1}=b_{m+1}$, and — the single fact doing all the work — $Y_{m+1}=K_{m+1}$ for $m+1\le n$:
+
+$$v_m-v_{m+1} = (T_m-T_{m+1}) - K_mS_m + K_{m+1}S_{m+1} = b_{m+1}(Y_{m+1}-K_{m+1}) + (K_{m+1}-K_m)S_m = (K_{m+1}-K_m)S_m$$
+
+(the $b_{m+1}$ term vanishes identically, since $Y_{m+1}-K_{m+1}=0$). So:
+
+$$S_m = \frac{v_m-v_{m+1}}{K_{m+1}-K_m}, \qquad 1\le m\le n-1$$
+
+*Step 3 (interior coefficients).* For $2\le i\le n-1$: $b_{K_i} = b_i = S_{i-1}-S_i$, and both are given by Step 2:
+
+$$b_{K_i} = \frac{v_{i-1}-v_i}{K_i-K_{i-1}} - \frac{v_i-v_{i+1}}{K_{i+1}-K_i} = \frac{(K_{i+1}-K_i)v_{i-1} - (K_{i+1}-K_{i-1})v_i + (K_i-K_{i-1})v_{i+1}}{(K_i-K_{i-1})(K_{i+1}-K_i)}$$
+
+Since both factors in the denominator are positive, $b_{K_i}\ge0$ iff the stated butterfly inequality holds.
+
+*Step 4 ($b_{K_n}$).* $b_{K_n}=b_n=S_{n-1}-S_n$:
+
+$$b_{K_n} = \frac{v_{n-1}-v_n}{K_n-K_{n-1}} - \frac{v_n}{H-K_n} = \frac{(H-K_n)v_{n-1}-(H-K_{n-1})v_n}{(K_n-K_{n-1})(H-K_n)}$$
+
+Both factors in the denominator are positive, giving $b_{K_n}\ge0 \iff v_{n-1}\ge v_n\cdot\frac{H-K_{n-1}}{H-K_n}$.
+
+*Step 5 ($b_L$).* Use the $\sigma$-equation together with $S_0=\frac1R-b_L$ and the $\kappa_1$-equation. Writing the $\sigma$-equation as $s=b_LL+T_0$ with $T_0=b_1K_1+T_1$, and the $\kappa_1$-equation as $T_1=v_1+K_1S_1$, and $b_1=S_0-S_1$:
+
+$$s = b_LL + (S_0-S_1)K_1 + v_1+K_1S_1 = b_LL+S_0K_1+v_1$$
+
+so $s-v_1=b_LL+S_0K_1$. Using $S_0=\frac1R-b_L$:
+
+$$s-v_1 = b_L(L-K_1)+\frac{K_1}{R} \implies b_L = \frac{K_1-R(s-v_1)}{R(K_1-L)} \implies b_L\ge0\iff v_1\ge s-\frac{K_1}{R}$$
+
+*Step 6 ($b_{K_1}$, when $n\ge2$).* $b_{K_1}=b_1=S_0-S_1 = \left(\frac1R-b_L\right) - \frac{v_1-v_2}{K_2-K_1}$. Substituting $b_L$ from Step 5 and simplifying:
+
+$$b_{K_1} = \frac{(K_1-K_2)(Rs-L)+Rv_1(K_2-L)-Rv_2(K_1-L)}{R(K_1-L)(K_1-K_2)}$$
+
+The denominator is negative ($R(K_1-L)>0$, $(K_1-K_2)<0$), giving
+
+$$b_{K_1}\ge0 \iff (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\frac{L}{R}\right). \qquad\blacksquare$$
+
+Every step above is ordinary substitution in a linear system — no determinant cofactors, no case-by-case sign bookkeeping. The entire mechanism reduces to one identity, used repeatedly: $Y_{m+1}=K_{m+1}$ makes the $b_{m+1}$-term in the difference of consecutive $\kappa$-equations vanish automatically, which is *why* the system telescopes into the local tail-sum recursion above.
+
+### Recovering $n=1,2,3$
+
+Setting $n=1$: only $b_L$ and $b_{K_1}$ (computed directly from $\rho,\sigma,\kappa_1$, since there is no $S_1$ intermediate) and $b_H$ exist — matching the first worked example's $b,d,c$ exactly. Setting $n=2,3$ and reading off Steps 1, 4, 5, 6 (and, for $n=3$, the single interior application of Step 3 at $i=2$) reproduces the second and third worked examples' combined results term for term.
+
+---
 
 ## Conclusion
 
-What may be worth stating formally is a structural claim about the derivation method itself:
+The central claim of this note is a **locality theorem**: in the $n$-strike single-period model, every no-arbitrage condition — on the discounted bond, the stock, and each of the $n$ options — depends on at most three consecutive points in the ordered reference chain $L,K_1,\ldots,K_n,H$, regardless of how large $n$ is. This is proved, not merely observed: the mechanism is a single algebraic fact (that $Y_{m+1}=K_{m+1}$ exactly, so that a piecewise-linear payoff's discrete second difference vanishes outside its own support), applied uniformly via a telescoping tail-sum substitution in the defining linear system.
 
-**Proposition (locality of no-arbitrage conditions).** In the $n$-strike single-period model, the no-arbitrage condition on the coefficient attached to each reference outcome depends only on that outcome's immediate neighbors in the ordered chain $L,K_1,\ldots,K_n,H$ — never on more distant reference points. In particular, the condition at each interior strike $K_i$ ($2\le i\le n-1$) is exactly the discrete-convexity (butterfly-spread) inequality linking $K_{i-1},K_i,K_{i+1}$, and it is produced by the same mechanical coefficient-extraction used for every other bound, with no separate construction.
+Three things follow from this.
 
-This has been confirmed by direct computation for $n=1,2,3$ (Steps above), and checked numerically for $n=4$. The value of the proposition, if it holds in general, is not in any single inequality it produces — but in showing that a whole family of no-arbitrage relationships, including one that looks like it should need its own dedicated convexity argument, falls out of a single, uniform, mechanical procedure applied identically at every reference point.
+**First**, the abstract statement of the Fundamental Theorem of Asset Pricing — no-arbitrage iff the price lies in a certain cone — is upgraded, for this model and for any number of strikes, to a fully explicit system of $n+2$ checkable inequalities (Theorem 3), each as easy to verify as a single arithmetic comparison between neighboring option prices and strikes.
 
+**Second**, the interior condition recovered here is exactly the classical discrete-convexity (butterfly-spread) no-arbitrage condition on option prices across strikes, familiar from the state-price-density literature (Breeden–Litzenberger). What this note adds is not the qualitative fact of convexity, which is well known, but (i) a single uniform derivation supplying that condition *together with* the two boundary families (near $L$ and near $H$) under one proof, and (ii) a demonstration that the locality is exact and general — three neighboring points and no more, for every interior strike, for every $n$ — rather than a pattern checked case by case.
+
+**Third**, the practical upshot is computational: checking no-arbitrage for a ladder of $n$ strikes is an $O(n)$ task — one local check per reference point — rather than requiring the evaluation of an $(n+2)$-dimensional determinant or the solution of a general linear program. The determinant $\Pi$ and the cone-membership characterization (Theorems 1–2) remain useful as the underlying reason the local system is well-posed and has a unique solution, but the day-to-day content of the result is the boxed system in Theorem 3.
+
+The derivation throughout — from the single-option warm-up to the general-$n$ theorem — follows one consistent method: represent price points as vectors in an exterior algebra over the market's basic instruments, extract the unique non-negative combination via Cramer's rule (or, in the general case, by direct substitution in the equivalent linear system), and read off no-arbitrage as non-negativity of that combination's coefficients. That the same method scales, without modification, from three instruments to arbitrarily many, and yields a closed form rather than an ever-growing case analysis, is the paper's principal technical contribution.
