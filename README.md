@@ -582,13 +582,15 @@ $$\text{no-arbitrage} \iff b_p\ge0 \text{ for every } p=0,1,\ldots,n+1$$
 
 with each condition depending only on immediate neighbors — the exact conditions, and which ones exist, depend on $n$:
 
-$$\boxed{\begin{array}{ll}
-b_L\ge0 &\iff v_1\ge s-\dfrac{K_1}{R} \\[6pt]
-b_{K_1}\ge0 &\iff (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\dfrac{L}{R}\right) \qquad (n\ge2)\\[6pt]
-b_{K_i}\ge0 &\iff v_i \le \dfrac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \quad 2\le i\le n-1 \qquad (n\ge3)\\[6pt]
-b_{K_n}\ge0 &\iff v_{n-1}\ge v_n\cdot\dfrac{H-K_{n-1}}{H-K_n} \qquad (n\ge2)\\[6pt]
-b_H\ge0 &\iff v_n\ge0
-\end{array}}$$
+$$b_L\ge0 \iff v_1\ge s-\frac{K_1}{R}$$
+
+$$b_{K_1}\ge0 \iff (K_2-L)v_1-(K_1-L)v_2 \le (K_2-K_1)\left(s-\frac{L}{R}\right) \qquad (n\ge2)$$
+
+$$b_{K_i}\ge0 \iff v_i \le \frac{(K_{i+1}-K_i)v_{i-1}+(K_i-K_{i-1})v_{i+1}}{K_{i+1}-K_{i-1}}, \qquad 2\le i\le n-1 \qquad (n\ge3)$$
+
+$$b_{K_n}\ge0 \iff v_{n-1}\ge v_n\cdot\frac{H-K_{n-1}}{H-K_n} \qquad (n\ge2)$$
+
+$$b_H\ge0 \iff v_n\ge0$$
 
 For $n=1$ there is no interior condition and $K_1=K_n$ is simultaneously the near-$L$ and near-$H$ boundary strike, so the single condition on $b_{K_1}$ is derived on its own — it is exactly the $n=1$ worked example's coefficient $d$ above. For $n=2$, both boundary formulas apply directly and there is still no interior condition (matching the two-strike worked example above exactly). The general boundary and interior formulas are stated for $n\ge3$, matching the three-strike worked example as the base case.
 
@@ -598,13 +600,13 @@ Rather than expand a large determinant and its cofactors for each coefficient se
 
 **Setting up the system.** Matching coordinates in $x = a\,O+\sum_{p=0}^{n+1}b_p X(Y_p)$ against $x=O+\rho+s\sigma+\sum_m v_m\kappa_m$ and $X(Y_p)=O+R\rho+Y_p\sigma+\sum_m\max(Y_p-K_m,0)\kappa_m$ gives, coordinate by coordinate:
 
-$$\rho:\quad \sum_{p=0}^{n+1} b_p = \frac1R \qquad\qquad \sigma:\quad \sum_{p=0}^{n+1} b_p Y_p = s$$
+$$\rho:\quad \sum_{p=0}^{n+1} b_p = \frac{1}{R} \qquad\qquad \sigma:\quad \sum_{p=0}^{n+1} b_p Y_p = s$$
 
 $$\kappa_m\ (1\le m\le n):\quad \sum_{p:\,Y_p>K_m} b_p\,(Y_p-K_m) = v_m$$
 
 (the $O$-coordinate equation only pins down $a$ and plays no further role). This is $n+2$ equations in the $n+2$ unknowns $b_0,\ldots,b_{n+1}$; Theorem 1 guarantees a unique solution.
 
-**Solving by substitution.** Define the tail sum $S_m := \sum_{p=m+1}^{n+1} b_p$ for $m=0,1,\ldots,n$ (so $S_n=b_{n+1}=b_H$, and $S_0=\frac1R-b_L$). The $\kappa_m$-equation reads $v_m = T_m - K_mS_m$ where $T_m:=\sum_{p>m}b_pY_p$.
+**Solving by substitution.** Define the tail sum $S_m := \sum_{p=m+1}^{n+1} b_p$ for $m=0,1,\ldots,n$ (so $S_n=b_{n+1}=b_H$, and $S_0=\frac{1}{R}-b_L$). The $\kappa_m$-equation reads $v_m = T_m - K_mS_m$ where $T_m:=\sum_{p>m}b_pY_p$.
 
 *Step 1 (rightmost strike).* For $m=n$: only $p=n+1$ survives the sum, giving $v_n = b_{n+1}(H-K_n)$, i.e.
 
@@ -630,15 +632,15 @@ $$b_{K_n} = \frac{v_{n-1}-v_n}{K_n-K_{n-1}} - \frac{v_n}{H-K_n} = \frac{(H-K_n)v
 
 Both factors in the denominator are positive, giving $b_{K_n}\ge0 \iff v_{n-1}\ge v_n\cdot\frac{H-K_{n-1}}{H-K_n}$.
 
-*Step 5 ($b_L$).* Use the $\sigma$-equation together with $S_0=\frac1R-b_L$ and the $\kappa_1$-equation. Writing the $\sigma$-equation as $s=b_LL+T_0$ with $T_0=b_1K_1+T_1$, and the $\kappa_1$-equation as $T_1=v_1+K_1S_1$, and $b_1=S_0-S_1$:
+*Step 5 ($b_L$).* Use the $\sigma$-equation together with $S_0=\frac{1}{R}-b_L$ and the $\kappa_1$-equation. Writing the $\sigma$-equation as $s=b_LL+T_0$ with $T_0=b_1K_1+T_1$, and the $\kappa_1$-equation as $T_1=v_1+K_1S_1$, and $b_1=S_0-S_1$:
 
 $$s = b_LL + (S_0-S_1)K_1 + v_1+K_1S_1 = b_LL+S_0K_1+v_1$$
 
-so $s-v_1=b_LL+S_0K_1$. Using $S_0=\frac1R-b_L$:
+so $s-v_1=b_LL+S_0K_1$. Using $S_0=\frac{1}{R}-b_L$:
 
 $$s-v_1 = b_L(L-K_1)+\frac{K_1}{R} \implies b_L = \frac{K_1-R(s-v_1)}{R(K_1-L)} \implies b_L\ge0\iff v_1\ge s-\frac{K_1}{R}$$
 
-*Step 6 ($b_{K_1}$, when $n\ge2$).* $b_{K_1}=b_1=S_0-S_1 = \left(\frac1R-b_L\right) - \frac{v_1-v_2}{K_2-K_1}$. Substituting $b_L$ from Step 5 and simplifying:
+*Step 6 ($b_{K_1}$, when $n\ge2$).* $b_{K_1}=b_1=S_0-S_1 = \left(\frac{1}{R}-b_L\right) - \frac{v_1-v_2}{K_2-K_1}$. Substituting $b_L$ from Step 5 and simplifying:
 
 $$b_{K_1} = \frac{(K_1-K_2)(Rs-L)+Rv_1(K_2-L)-Rv_2(K_1-L)}{R(K_1-L)(K_1-K_2)}$$
 
