@@ -592,7 +592,7 @@ $$b_{K_n}\ge0 \iff v_{n-1}\ge v_n\cdot\frac{H-K_{n-1}}{H-K_n} \qquad (n\ge2)$$
 
 $$b_H\ge0 \iff v_n\ge0$$
 
-For $n=1$ there is no interior condition and $K_1=K_n$ is simultaneously the near-$L$ and near-$H$ boundary strike, so the single condition on $b_{K_1}$ is derived on its own — it is exactly the $n=1$ worked example's coefficient $d$ above. For $n=2$, both boundary formulas apply directly and there is still no interior condition (matching the two-strike worked example above exactly). The general boundary and interior formulas are stated for $n\ge3$, matching the three-strike worked example as the base case.
+For $n=1$ there is no interior condition and $K_1=K_n$ is simultaneously the near $L$ boundary strike and the near $H$ boundary strike, so the single condition on $b_{K_1}$ is derived on its own — it is exactly the $n=1$ worked example's coefficient $d$ above. For $n=2$, both boundary formulas apply directly and there is still no interior condition (matching the two-strike worked example above exactly). The general boundary and interior formulas are stated for $n\ge3$, matching the three-strike worked example as the base case.
 
 ### Proof: a direct linear-system argument
 
@@ -608,11 +608,11 @@ $$\kappa_m\ (1\le m\le n):\quad \sum_{p:\,Y_p>K_m} b_p\,(Y_p-K_m) = v_m$$
 
 **Solving by substitution.** Define the tail sum $S_m := \sum_{p=m+1}^{n+1} b_p$ for $m=0,1,\ldots,n$ (so $S_n=b_{n+1}=b_H$, and $S_0=\frac{1}{R}-b_L$). The $\kappa_m$-equation reads $v_m = T_m - K_mS_m$ where $T_m:=\sum_{p>m}b_pY_p$.
 
-*Step 1 (rightmost strike).* For $m=n$: only $p=n+1$ survives the sum, giving $v_n = b_{n+1}(H-K_n)$, i.e.
+**Step 1: rightmost strike.** For $m=n$: only $p=n+1$ survives the sum, giving $v_n = b_{n+1}(H-K_n)$, i.e.
 
 $$b_H = \frac{v_n}{H-K_n} \implies b_H\ge0\iff v_n\ge0$$
 
-*Step 2 (consecutive-difference telescoping).* For $1\le m\le n-1$, subtract the $\kappa_{m+1}$-equation from the $\kappa_m$-equation. Using $T_m-T_{m+1}=b_{m+1}Y_{m+1}$, $S_m-S_{m+1}=b_{m+1}$, and — the single fact doing all the work — $Y_{m+1}=K_{m+1}$ for $m+1\le n$:
+**Step 2: consecutive-difference telescoping.** For $1\le m\le n-1$, subtract the $\kappa_{m+1}$-equation from the $\kappa_m$-equation. Using $T_m-T_{m+1}=b_{m+1}Y_{m+1}$, $S_m-S_{m+1}=b_{m+1}$, and the single fact doing all the work, namely $Y_{m+1}=K_{m+1}$ for $m+1\le n$:
 
 $$v_m-v_{m+1} = (T_m-T_{m+1}) - K_mS_m + K_{m+1}S_{m+1} = b_{m+1}(Y_{m+1}-K_{m+1}) + (K_{m+1}-K_m)S_m = (K_{m+1}-K_m)S_m$$
 
@@ -620,19 +620,19 @@ $$v_m-v_{m+1} = (T_m-T_{m+1}) - K_mS_m + K_{m+1}S_{m+1} = b_{m+1}(Y_{m+1}-K_{m+1
 
 $$S_m = \frac{v_m-v_{m+1}}{K_{m+1}-K_m}, \qquad 1\le m\le n-1$$
 
-*Step 3 (interior coefficients).* For $2\le i\le n-1$: $b_{K_i} = b_i = S_{i-1}-S_i$, and both are given by Step 2:
+**Step 3: interior coefficients.** For $2\le i\le n-1$: $b_{K_i} = b_i = S_{i-1}-S_i$, and both are given by Step 2:
 
 $$b_{K_i} = \frac{v_{i-1}-v_i}{K_i-K_{i-1}} - \frac{v_i-v_{i+1}}{K_{i+1}-K_i} = \frac{(K_{i+1}-K_i)v_{i-1} - (K_{i+1}-K_{i-1})v_i + (K_i-K_{i-1})v_{i+1}}{(K_i-K_{i-1})(K_{i+1}-K_i)}$$
 
 Since both factors in the denominator are positive, $b_{K_i}\ge0$ iff the stated butterfly inequality holds.
 
-*Step 4 ($b_{K_n}$).* $b_{K_n}=b_n=S_{n-1}-S_n$:
+**Step 4: the coefficient $b_{K_n}$.** $b_{K_n}=b_n=S_{n-1}-S_n$:
 
 $$b_{K_n} = \frac{v_{n-1}-v_n}{K_n-K_{n-1}} - \frac{v_n}{H-K_n} = \frac{(H-K_n)v_{n-1}-(H-K_{n-1})v_n}{(K_n-K_{n-1})(H-K_n)}$$
 
 Both factors in the denominator are positive, giving $b_{K_n}\ge0 \iff v_{n-1}\ge v_n\cdot\frac{H-K_{n-1}}{H-K_n}$.
 
-*Step 5 ($b_L$).* Use the $\sigma$-equation together with $S_0=\frac{1}{R}-b_L$ and the $\kappa_1$-equation. Writing the $\sigma$-equation as $s=b_LL+T_0$ with $T_0=b_1K_1+T_1$, and the $\kappa_1$-equation as $T_1=v_1+K_1S_1$, and $b_1=S_0-S_1$:
+**Step 5: the coefficient $b_L$.** Use the $\sigma$-equation together with $S_0=\frac{1}{R}-b_L$ and the $\kappa_1$-equation. Writing the $\sigma$-equation as $s=b_LL+T_0$ with $T_0=b_1K_1+T_1$, and the $\kappa_1$-equation as $T_1=v_1+K_1S_1$, and $b_1=S_0-S_1$:
 
 $$s = b_LL + (S_0-S_1)K_1 + v_1+K_1S_1 = b_LL+S_0K_1+v_1$$
 
@@ -640,7 +640,7 @@ so $s-v_1=b_LL+S_0K_1$. Using $S_0=\frac{1}{R}-b_L$:
 
 $$s-v_1 = b_L(L-K_1)+\frac{K_1}{R} \implies b_L = \frac{K_1-R(s-v_1)}{R(K_1-L)} \implies b_L\ge0\iff v_1\ge s-\frac{K_1}{R}$$
 
-*Step 6 ($b_{K_1}$, when $n\ge2$).* $b_{K_1}=b_1=S_0-S_1 = \left(\frac{1}{R}-b_L\right) - \frac{v_1-v_2}{K_2-K_1}$. Substituting $b_L$ from Step 5 and simplifying:
+**Step 6: the coefficient $b_{K_1}$, valid when $n\ge2$.** $b_{K_1}=b_1=S_0-S_1 = \left(\frac{1}{R}-b_L\right) - \frac{v_1-v_2}{K_2-K_1}$. Substituting $b_L$ from Step 5 and simplifying:
 
 $$b_{K_1} = \frac{(K_1-K_2)(Rs-L)+Rv_1(K_2-L)-Rv_2(K_1-L)}{R(K_1-L)(K_1-K_2)}$$
 
@@ -668,4 +668,4 @@ Three things follow from this.
 
 **Third**, the practical upshot is computational: checking no-arbitrage for a ladder of $n$ strikes is an $O(n)$ task — one local check per reference point — rather than requiring the evaluation of an $(n+2)$-dimensional determinant or the solution of a general linear program. The determinant $\Pi$ and the cone-membership characterization (Theorems 1–2) remain useful as the underlying reason the local system is well-posed and has a unique solution, but the day-to-day content of the result is the boxed system in Theorem 3.
 
-The derivation throughout — from the single-option warm-up to the general-$n$ theorem — follows one consistent method: represent price points as vectors in an exterior algebra over the market's basic instruments, extract the unique non-negative combination via Cramer's rule (or, in the general case, by direct substitution in the equivalent linear system), and read off no-arbitrage as non-negativity of that combination's coefficients. That the same method scales, without modification, from three instruments to arbitrarily many, and yields a closed form rather than an ever-growing case analysis, is the paper's principal technical contribution.
+The derivation throughout, from the single-option warm-up to the general $n$ theorem, follows one consistent method: represent price points as vectors in an exterior algebra over the market's basic instruments, extract the unique non-negative combination via Cramer's rule (or, in the general case, by direct substitution in the equivalent linear system), and read off no-arbitrage as non-negativity of that combination's coefficients. That the same method scales, without modification, from three instruments to arbitrarily many, and yields a closed form rather than an ever-growing case analysis, is the paper's principal technical contribution.
